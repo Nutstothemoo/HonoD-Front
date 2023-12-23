@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { token } from '../utils/token';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { setCookie } from 'nookies';
 import axios from 'axios';
-
-
 
 interface LoginFormProps {
   onFormSubmit: (username: string, password: string) => any;
@@ -22,9 +20,9 @@ function LoginForm({ onFormSubmit }: LoginFormProps)  {
     if (token) {
       router.push('/dashboard')
     }
-  }, [])
+  }, [router])
 
- const formik = useFormik({
+  const formik = useFormik({
     initialValues: {
       username: '',
       password: '',
@@ -45,11 +43,11 @@ function LoginForm({ onFormSubmit }: LoginFormProps)  {
         setCookie(null, 'auth-token', auth_token, {
           path: '/',
           sameSite: 'strict',
-          maxAge: 3 * 24 * 60 * 60, // expires in 3 days
+          maxAge: 3 * 24 * 60 * 60, 
         });
     
         setSuccess('Logged in successfully!');
-        router.push('/dashboard', undefined, { shallow: true });
+        router.push('/dashboard', undefined);
       } catch (error :any) {
         if (error.response) {
           const { non_field_errors: requestError } = error.response.data;
@@ -94,6 +92,7 @@ function LoginForm({ onFormSubmit }: LoginFormProps)  {
       <input 
       className="px-4 py-2 font-bold rounded-full focus:outline-none focus:shadow-outline" 
       type="submit" 
+      onClick={() => router.push('/dashboard')}
       value="S'inscrire" />
     </form>
     </div>

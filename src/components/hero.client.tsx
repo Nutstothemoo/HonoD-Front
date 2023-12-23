@@ -13,14 +13,14 @@ function RevolutionaryTicketSection() {
     setShowNewComponent(true);
   };
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   return showNewComponent ? (
     <LoginNav />
   ) : (
     <motion.section
-    className="flex items-center justify-center text-white py-16"
-    initial={{ opacity: 0}}
+      className="flex items-center justify-center text-white py-16"
+      initial={{ opacity: 0}}
       animate={{ opacity: 1}}
       exit={{ opacity: 0 }}
     >

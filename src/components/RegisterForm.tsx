@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Button from './atoms/Button';
+import { useRouter } from 'next/router';
 
 interface RegisterFormProps {
   onFormSubmit: (user: any) => any;
@@ -8,7 +9,7 @@ interface RegisterFormProps {
 
 
 function RegisterForm({ onFormSubmit }: RegisterFormProps) {
-
+  const router = useRouter()
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
@@ -63,7 +64,12 @@ function RegisterForm({ onFormSubmit }: RegisterFormProps) {
           <input className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
         </label>
         {error && <p className="text-red-500">{error}</p>}
-        <Button text="submit" size="small" onClick={handleSubmit} />
+        <Button
+          text="submit" 
+          size="small" 
+          // onClick={handleSubmit}
+          onClick={() => router.push('/dashboard')} 
+          />
         </form>
       </div>
   );

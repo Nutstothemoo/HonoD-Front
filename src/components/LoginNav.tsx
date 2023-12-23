@@ -10,6 +10,7 @@ function LoginNav() {
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [showLoginNav, setShowLoginNav] = useState(false); // [1
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showButtons, setShowButtons] = useState(true);
 
   const handleGoogleLogin = () => {
     console.log('Se connecter via Google');
@@ -21,11 +22,15 @@ function LoginNav() {
 
   const handleInternalLogin = () => {
     setShowLonginForm(prevShowForm => !prevShowForm);
+    if (showRegisterForm) setShowRegisterForm(false);
+    if (showButtons) setShowButtons(false);
   };
+
   const handleInternalRegister = () => {
     setShowLoginNav(prevShowLoginNav => !prevShowLoginNav);
     setShowRegisterForm(prevShowForm => !prevShowForm);
     if (showLoginForm) setShowLonginForm(false);
+    if (showButtons) setShowButtons(false);
   };
 
   const handleFormSubmit = async (username: string, password: string) => {
@@ -65,6 +70,13 @@ function LoginNav() {
       throw new Error(error);
     }
   };
+
+  const handleBackClick = () => {
+    setShowButtons(true);
+    if (showLoginForm) setShowLonginForm(false);
+    if(showRegisterForm) setShowRegisterForm(false);
+  };
+
   return (
     <>
     {!isLoggedIn && (
@@ -75,11 +87,16 @@ function LoginNav() {
             Choisissez votre méthode de connexion préférée.
           </p>
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            <Button size="medium" text="Se connecter via Google" onClick={handleGoogleLogin} />
-            <Button size="medium" text="Se connecter via Facebook" onClick={handleFacebookLogin} />
-            <Button size="medium" text="Se connecter via HonoD" onClick={handleInternalLogin} />
-            <Button size="large" text="S'inscrire" onClick={handleInternalRegister} />
+            {showButtons ? (
+              <>
+                <Button size="medium" text="Se connecter via Google" onClick={handleGoogleLogin} />
+                <Button size="medium" text="Se connecter via Facebook" onClick={handleFacebookLogin} />
+                <Button size="medium" text="Se connecter via HonoD" onClick={handleInternalLogin} />
+                <Button size="large" text="S'inscrire" onClick={handleInternalRegister} />
+              </>
+            ) : (
+              <Button size="medium" text="⟨ Retour" onClick={handleBackClick} />
+            )}
             {showRegisterForm && (<RegisterForm onFormSubmit={handleRegisterFormSubmit} />)}
             {showLoginForm && (<LoginForm onFormSubmit={handleFormSubmit} />)}
 
