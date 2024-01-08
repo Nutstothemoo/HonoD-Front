@@ -1,5 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
+import Badge from './Badge';
+import DropdownMenuAvatar from '@/components/AvatarDropDownMenu';
 
 function Navbar() {
   return (
@@ -21,16 +23,11 @@ function Navbar() {
             <Link href="/dashboard/ticket" className="my-1 text-sm font-medium md:mx-4 md:my-0">
               Ticket
             </Link>
-            <Link href="/dashboard/profil" className="my-1 text-sm font-medium md:mx-4 md:my-0">
-              Profil
-            </Link>
           </div>
+        </div>
 
-          {/* <div className="mt-3 md:mt-0">
-            <form className="flex">
-              <input className="w-full px-4 py-2 border rounded-lg focus:outline-none" type="text" placeholder="Rechercher" />
-            </form>
-          </div> */}
+        <div>
+        <DropdownMenuAvatar />
         </div>
       </div>
     </nav>

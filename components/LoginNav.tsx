@@ -3,21 +3,49 @@ import LoginForm from './LoginForm';
 import axios from 'axios';
 import RegisterForm from './RegisterForm';
 import Button from './atoms/Button';
-
+import FacebookLogin from './facebookLogin';
+import { motion } from 'framer-motion';
+import {toast} from 'sonner';
 
 function LoginNav() {
   const [showLoginForm, setShowLonginForm] = useState(false);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
-  const [showLoginNav, setShowLoginNav] = useState(false); // [1
+  const [showFacebookLogin, setShowFacebookLogin] = useState(false);
+  const [showGoogleLogin, setShowGoogleLogin] = useState(false);  
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showButtons, setShowButtons] = useState(true);
 
-  const handleGoogleLogin = () => {
-    console.log('Se connecter via Google');
-  };
+  const handleGoogleLogin = async () => {
+    setShowGoogleLogin(prevShowForm => !prevShowForm);
+    if (showFacebookLogin) setShowFacebookLogin(false);
+    if (showButtons) setShowButtons(false);
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/login/google`);
+    if (response.status === 200) {
+      const url = response.data.url;
+      window.location.href = url;
+    } else {
+      setShowButtons(true);
+      toast.error("Google login failed");
+    }
+  };  
+  const handleFacebookLogin = async () => {
+    setShowFacebookLogin(prevShowForm => !prevShowForm);
+    if (showGoogleLogin) setShowGoogleLogin(false);
+    if (showButtons) setShowButtons(false);
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/login/facebook`);
 
-  const handleFacebookLogin = () => {
-    console.log('Se connecter via Facebook');
+      if (response.status === 200) {
+        const url = response.data.url;
+        window.location.href = url;
+      } else {
+        setShowButtons(true);
+        toast.error("Facebook login failed");
+      }
+    } catch (error) {
+      setShowButtons(true);
+      toast.error("Facebook login failed");
+    }
   };
 
   const handleInternalLogin = () => {
@@ -25,83 +53,73 @@ function LoginNav() {
     if (showRegisterForm) setShowRegisterForm(false);
     if (showButtons) setShowButtons(false);
   };
-
   const handleInternalRegister = () => {
-    setShowLoginNav(prevShowLoginNav => !prevShowLoginNav);
     setShowRegisterForm(prevShowForm => !prevShowForm);
     if (showLoginForm) setShowLonginForm(false);
     if (showButtons) setShowButtons(false);
   };
 
-  const handleFormSubmit = async (username: string, password: string) => {
-    try {
-      const response = await axios.post(`${process.env.BACK_END_URL}/login`, {
-        username,
-        password,
-      });
-
-      if (response.status === 200) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-    } catch (error: any) {
-      throw new Error(error);
-    }
-  };
-
-  const handleRegisterFormSubmit = async (user: { firstName: string, lastName: string, username: string, password: string, email: string, phone: string }) => {
-    try {
-      const response = await axios.post(`${process.env.BACK_END_URL}/register`, {
-        first_name: user.firstName,
-        last_name: user.lastName,
-        username: user.username,
-        password: user.password,
-        email: user.email,
-        phone: user.phone,
-      });
-  
-      if (response.status === 200) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-    } catch (error: any) {
-      throw new Error(error);
-    }
-  };
 
   const handleBackClick = () => {
     setShowButtons(true);
     if (showLoginForm) setShowLonginForm(false);
     if(showRegisterForm) setShowRegisterForm(false);
+    if(showGoogleLogin) setShowGoogleLogin(false);
+    if(showFacebookLogin) setShowFacebookLogin(false);
   };
 
   return (
     <>
     {!isLoggedIn && (
       <section className="text-white py-16">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-extrabold">Connectez-vous</h2>
+        <motion.div 
+        className="container mx-auto text-center"
+        initial={{ opacity: 0, x: -100 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 100 }}
+        >
+        <h2 className="text-4xl font-extrabold">
+            {showButtons && 'Connectez-vous'}
+            {showGoogleLogin && 'Connectez-vous avec Google'}
+            {showFacebookLogin && 'Connectez-vous avec Meta'}
+            {showLoginForm && 'Connectez-vous avec votre compte'}
+            {showRegisterForm && 'Créez un nouveau compte'}
+          </h2>
           <p className="text-lg mt-4">
-            Choisissez votre méthode de connexion préférée.
+            {showButtons && 'Choisissez votre méthode de connexion préférée.'}
+            {showGoogleLogin && 'Veuillez vous connecter avec votre compte Google.'}
+            {showFacebookLogin && 'Veuillez vous connecter avec votre compte Meta.'}
+            {showLoginForm && 'Veuillez entrer vos informations de connexion.'}
+            {showRegisterForm && 'Veuillez entrer vos informations pour créer un nouveau compte.'}
           </p>
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <motion.div 
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 100 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="mt-9 grid grid-cols-1 sm:grid-cols-2 gap-6">
             {showButtons ? (
-              <>
-                <Button size="medium" text="Se connecter via Google" onClick={handleGoogleLogin} />
-                <Button size="medium" text="Se connecter via Facebook" onClick={handleFacebookLogin} />
-                <Button size="medium" text="Se connecter via HonoD" onClick={handleInternalLogin} />
-                <Button size="large" text="S'inscrire" onClick={handleInternalRegister} />
+              <>          
+              <motion.div 
+                initial={{ opacity: 0, x: -100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 100 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}>
+                <Button size="medium" text="Google" onClick={handleGoogleLogin} />
+                <Button size="medium" text="Meta" onClick={handleFacebookLogin} />
+                <Button size="medium" text="Login" onClick={handleInternalLogin} />
+                <Button size="medium" text="Register" onClick={handleInternalRegister} />
+                </motion.div>
               </>
             ) : (
-              <Button size="medium" text="⟨ Retour" onClick={handleBackClick} />
+              ""
             )}
-            {showRegisterForm && (<RegisterForm onFormSubmit={handleRegisterFormSubmit} />)}
-            {showLoginForm && (<LoginForm onFormSubmit={handleFormSubmit} />)}
-
-          </div>
-        </div>
+            {showRegisterForm && (<RegisterForm  onBackClick={handleBackClick} />)}
+            {showLoginForm && (
+              <LoginForm onBackClick={handleBackClick}/>
+            )}
+          </motion.div>
+        </motion.div>
       </section>
     )}
     </>
