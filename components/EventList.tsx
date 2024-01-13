@@ -1,19 +1,12 @@
 import EventCard from './atoms/EventCard';
 
-interface Event {
-  id: number;
+export interface Event {
+  id: string;
   title: string;
-  imageUrl: string;
+  thumbnailUrl?: string;
   description: string;
 }
 
-const events = [
-  { id: 1, title: 'Event 1', description: 'This is event 1' },
-  { id: 2, title: 'Event 2', description: 'This is event 2' },
-  { id: 3, title: 'Event 3', description: 'This is event 3' },
-  { id: 4, title: 'Event 4', description: 'This is event 4' },
-  { id: 5, title: 'Event 5', description: 'This is event 5' },
-];
 
 interface EventListProps {
   events: Event[];
