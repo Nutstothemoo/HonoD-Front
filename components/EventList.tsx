@@ -4,18 +4,19 @@ export interface Event {
   id: string;
   title: string;
   thumbnailUrl?: string;
-  description: string;
+  description?: string;
+  tags?: string[];
+  dealer?: string;
 }
-
 
 interface EventListProps {
   events: Event[];
 }
 
 const EventList: React.FC<EventListProps> = ({ events }) => (
-  <main className="w-full px-20 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  <main className="w-full px-20 mx-auto flex flex-wrap justify-center">
     {events.map((event) => (
-      <EventCard key={event.id} event={event} />
+        <EventCard key={event.id} event={event} />
     ))}
   </main>
 );
