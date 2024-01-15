@@ -7,6 +7,10 @@ export interface Event {
   description?: string;
   tags?: string[];
   dealer?: string;
+  price?:number;
+  startTime: string; // Add this line
+  endTime: string; //
+  
 }
 
 interface EventListProps {
@@ -14,7 +18,7 @@ interface EventListProps {
 }
 
 const EventList: React.FC<EventListProps> = ({ events }) => (
-  <main className="w-full px-20 mx-auto flex flex-wrap justify-center">
+  <main className="w-full md:px-10 lg:px-15 mx-auto flex flex-wrap justify-center">
     {events.map((event) => (
         <EventCard key={event.id} event={event} />
     ))}

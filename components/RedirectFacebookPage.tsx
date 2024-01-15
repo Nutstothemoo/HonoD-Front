@@ -14,7 +14,6 @@ const RedirectFacebookPage = () => {
 
 
   useEffect(() => {
-    console.log('useEffect called'); 
     if (typeof window !== 'undefined' && !hasRequested) {
       console.log('hasRequested is false');
       let code, state;
@@ -24,7 +23,7 @@ const RedirectFacebookPage = () => {
     if (code && state) {
       setHasRequested(true);
     // Construire l'URL avec les paramètres
-    // const backendURL = `${process.env.NEXT_PUBLIC_API_URL}/facebook/callback?code=${code}&state=${state}`;
+    const backendURL = `${process.env.NEXT_PUBLIC_API_URL}/facebook/callback?code=${code}&state=${state}`;
     // Effectuer la requête vers le backend avec Axios
       fetch(backendURL)
       .then((response: any) => {
