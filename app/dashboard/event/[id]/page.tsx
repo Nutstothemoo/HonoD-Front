@@ -3,7 +3,7 @@ import React  from 'react';
 import dayjs from 'dayjs';
 import GeolocationComponent from '@/components/Geolocation';
 import DealerComponent from '@/components/Dealer';
-import TicketSection from '@/components/TicketSection';
+import { TicketSection } from '@/components/TicketSection';
 
 export default async function Page({ params }: { params: { id: string } }) {
   
@@ -63,7 +63,6 @@ export default async function Page({ params }: { params: { id: string } }) {
     </div>
   );
 }
-
 
 async function fetchEvent(id : string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/event/${id}`)

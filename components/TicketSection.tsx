@@ -6,7 +6,8 @@ type TicketSectionProps = {
   tickets: Ticket[];
 };
 
-const TicketSection: React.FC<TicketSectionProps> = ({ tickets }) => {
+export const TicketSection: React.FC<TicketSectionProps> = ({ tickets }) => {
+  if (!tickets) return <p>No tickets available.</p>;
   return (
     <div className="flex flex-col">
       {tickets.map((ticket) => (
