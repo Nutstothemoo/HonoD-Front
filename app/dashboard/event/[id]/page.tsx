@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import GeolocationComponent from '@/components/Geolocation';
 import DealerComponent from '@/components/Dealer';
 import { TicketSection } from '@/components/TicketSection';
+import { Badge } from '@/components/ui/badge';
 
 export default async function Page({ params }: { params: { id: string } }) {
   
@@ -24,15 +25,15 @@ export default async function Page({ params }: { params: { id: string } }) {
     <div className='flex flex-col md:flex-row'>
       <div className='w-full md:w-1/2'>
         <h1 className="text-4xl font-bold mb-4">{event?.name}</h1>
+        <DealerComponent dealer={event?.dealer} />
         <p className="text-lg mb-2">{event?.description}</p>
         <p className="text-lg mb-2">{startTime} - {endTime}</p>
         <p className="text-lg mb-2">Timezone: {event?.timezone}</p>
-        <DealerComponent dealer={event?.dealer} />
         <GeolocationComponent geolocation={event?.geolocation} />
-        <p className="text-lg mb-2">Featured Text: {event?.featuredText}</p>
         <p className="text-lg mb-2">Is Festival: {event?.isFestival ? 'Yes' : 'No'}</p>
-        <p className="text-lg mb-2">Is Sold Out: {event?.isSoldOut ? 'Yes' : 'No'}</p>
-        <p className="text-lg mb-2">Ticket Price: {event?.minTicketPrice} {event?.currency}</p>
+        <p className="text-lg mb-2">Sold out: {event?.isSoldOut ? 'Yes' : 'No'}</p>
+        <p className="text-lg mb-2"> Now at : {event?.minTicketPrice} {event?.currency}</p>
+        <p className="text-lg mb-2"> Featured Text: {event?.featuredText}</p>
         <div className="mt-4">
           <h2 className="text-2xl font-bold mb-2">Artworks:</h2>
           <div className="grid grid-cols-3 gap-4">
@@ -47,10 +48,10 @@ export default async function Page({ params }: { params: { id: string } }) {
         {
           tagNames.length > 0 && 
           <div>
-            <h2>Tags:</h2>
+            <h2>Vibe:</h2>
             <ul>
               {tagNames.map((tag:any, index:any) => (
-                <li key={index}>{tag}</li>
+                  <Badge className='rounded-lg' key={index}>{tag}</Badge> 
               ))}
             </ul>
           </div>
