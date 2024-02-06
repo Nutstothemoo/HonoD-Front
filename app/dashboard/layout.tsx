@@ -10,7 +10,7 @@ export default function DashboardLayout({
   return (
     <>
       <Navbar />
-      <main className="flex flex-col items-center justify-between pt-24 ">
+      <main className="flex flex-col items-center justify-between pt-24">
         {children}
       <Toaster />
       </main>

@@ -8,6 +8,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Badge } from '../ui/badge';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import Link from 'next/link';
 
 import 'dayjs/locale/fr'; 
 interface EventCardProps {
@@ -18,11 +19,12 @@ const EventCard: FC<EventCardProps> = ({ event }) => {
   const router = useRouter();
   
   const goToEventPage = () => {
-    router.push(`/${event.title}/${event.id}`);
+    router.push(`/dashboard/event/${event._id}`);
   };
-  const tags = event.tags || []; 
-  const tagsToShow = tags.slice(0, 3);
-  const remainingTags = tags.length - tagsToShow.length;
+
+  const tagNames = event.tags ? event.tags.map(tag => tag.name) : [];
+  const tagsToShow = tagNames.slice(0, 3);
+  const remainingTags = tagNames.length - tagsToShow.length;
 
 
   const now = dayjs();
@@ -50,7 +52,9 @@ const EventCard: FC<EventCardProps> = ({ event }) => {
   };
 
   return (
-    <div className="p-2 w-full md:w-3/4 lg:w-1/2 xl:w-1/3 h-full flex flex-col justify-center items-center text-center gap-4 border-2 border-gray-200 rounded-md">
+    <a    
+      onClick={goToEventPage}
+      className="p-2 w-full md:w-3/4 lg:w-1/2 xl:w-1/3 h-full flex flex-col justify-center cursor-pointer items-center text-center gap-4 border-2 border-gray-200 rounded-md">
       <AspectRatio ratio={16 / 9}>
         <Image 
           src={event.thumbnailUrl ?? ''} 
@@ -64,7 +68,7 @@ const EventCard: FC<EventCardProps> = ({ event }) => {
       <h3 className=''>{event.dealer}</h3>
       <div className='flex flex-row gap-2 '>      
       <p className="text-sm text-gray-500">{getEventStatus()}</p>
-        <p className="text-sm text-gray-500">{event.price}€</p>
+        <p className="text-sm text-gray-500">{event.minTicketPrice}€</p>
       </div>
       <div className="flex flex-wrap gap-2">
         {tagsToShow.map((tag, index) => (
@@ -72,8 +76,8 @@ const EventCard: FC<EventCardProps> = ({ event }) => {
         ))}
         {remainingTags > 0 && <Badge>{remainingTags}+</Badge> }
       </div>
-      <ButtonEvent className="mt-2 px-2 py-2" onClick={goToEventPage} text={`>>`} />
-    </div>
+      {/* <ButtonEvent className="mt-2 px-2 py-2" onClick={goToEventPage} text={`>>`} /> */}
+    </a>
   );
 };
 

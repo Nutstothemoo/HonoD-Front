@@ -6,14 +6,12 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import LoginNav from './LoginNav';
 
-
 function RevolutionaryTicketSection() {
+  
   const [showNewComponent, setShowNewComponent] = useState(false);
   const handleClick = () => {
     setShowNewComponent(true);
   };
-
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   return showNewComponent ? (
     <LoginNav />
@@ -38,7 +36,7 @@ function RevolutionaryTicketSection() {
           </div>
           <div className="p-6 rounded-lg block glow">
             <h3 className="text-xl font-semibold">Achats simplifiés</h3>
-            <p className="mt-2">Achetez vos billets en quelques clics, sans tracas via l ensemble des protocoles de payement disponible en 2023</p>
+            <p className="mt-2">Achetez vos billets en quelques clics</p>
           </div>
           <div className="p-6 rounded-lg block glow">
             <h3 className="text-xl font-semibold">Expériences uniques</h3>

@@ -1,16 +1,16 @@
 import EventCard from './atoms/EventCard';
 
 export interface Event {
-  id: string;
+  _id: string;
   title: string;
   thumbnailUrl?: string;
   description?: string;
-  tags?: string[];
-  dealer?: string;
-  price?:number;
+  tags?: any[];
+  slug: string;
+  dealer?: string;  
+  minTicketPrice?:number;
   startTime: string; // Add this line
-  endTime: string; //
-  
+  endTime: string; //  
 }
 
 interface EventListProps {
@@ -18,9 +18,9 @@ interface EventListProps {
 }
 
 const EventList: React.FC<EventListProps> = ({ events }) => (
-  <main className="w-full md:px-10 lg:px-15 mx-auto flex flex-wrap justify-center">
+  <main className="w-full md:px-10 lg:px-20 mx-auto flex flex-wrap ">
     {events.map((event) => (
-        <EventCard key={event.id} event={event} />
+        <EventCard key={event._id} event={event} />
     ))}
   </main>
 );

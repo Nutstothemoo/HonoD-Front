@@ -22,23 +22,18 @@ const RedirectFacebookPage = () => {
 
     if (code && state) {
       setHasRequested(true);
-    // Construire l'URL avec les paramètres
     const backendURL = `${process.env.NEXT_PUBLIC_API_URL}/facebook/callback?code=${code}&state=${state}`;
-    // Effectuer la requête vers le backend avec Axios
       fetch(backendURL)
       .then((response: any) => {
         if (response.status === 200) {
           localStorage.setItem('user', JSON.stringify(response.data.user));
-          // router.push('/dashboard');
           toast.success('Vous êtes connecté');
         } else {
-          // router.push('/');
           toast.error('Une erreur est survenue');
         }
       })
       .catch(error => {
         console.error(error);
-        // router.push('/');
         toast.error('Une erreur est survenue');
       });
       }

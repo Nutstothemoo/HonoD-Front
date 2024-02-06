@@ -5,8 +5,7 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { Button } from "@/app/button"
 import { toast } from "sonner"
-import { useRouter } from 'next/router';
-
+import { useRouter } from 'next/navigation';
 import {
   Form,
   FormControl,

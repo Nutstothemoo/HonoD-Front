@@ -15,7 +15,7 @@ function Navbar() {
           </div>
         </div>
 
-        <div className="md:flex items-center">
+        <div className="sm:hidden">
           <div className="flex flex-col md:flex-row md:mx-6">
             <Link href="/dashboard/events" className="my-1 text-sm font-medium md:mx-4 md:my-0">
             Events

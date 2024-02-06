@@ -3,7 +3,6 @@ import LoginForm from './LoginForm';
 import axios from 'axios';
 import RegisterForm from './RegisterForm';
 import Button from './atoms/Button';
-import FacebookLogin from './facebookLogin';
 import { motion } from 'framer-motion';
 import {toast} from 'sonner';
 

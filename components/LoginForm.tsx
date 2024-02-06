@@ -38,15 +38,12 @@ function LoginForm({ onBackClick }: any)   {
 
   const onSubmit = async (data: LoginData) => {
     try {
-      console.log(data);
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/login`, data);
       if (response.status === 200) {
         toast.success("Connected");
       } else {
         toast.error("An error occurred");
-      }
-      console.log(response.data);
-      
+      }      
     } catch (error) {
       console.error(error);
     }
