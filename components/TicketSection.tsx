@@ -1,4 +1,3 @@
-// TicketSection.tsx
 import React from 'react';
 import TicketCard from './TicketCard';
 
