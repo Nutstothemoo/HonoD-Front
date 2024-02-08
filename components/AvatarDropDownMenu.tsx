@@ -5,15 +5,11 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Badge from "./Badge"
+import Link from "next/link";
 
 export default function DropdownMenuAvatar() {
   return (
@@ -28,10 +24,24 @@ export default function DropdownMenuAvatar() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            Profile
+            <Link href="/profile" className="my-1 text-sm font-medium md:mx-4 md:my-0">
+              Profile
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            Settings
+            <Link href="/event" className="my-1 text-sm font-medium md:mx-4 md:my-0">
+              My tickets
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/event" className="my-1 text-sm font-medium md:mx-4 md:my-0">
+              Event Manager
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+          <Link href="/setting" className="my-1 text-sm font-medium md:mx-4 md:my-0">
+              Settings
+          </Link>            
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

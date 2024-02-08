@@ -26,7 +26,7 @@ function Navbar() {
           </div>
         </div>
 
-        <div>
+        <div className='absolute top-3 right-2'>
         <DropdownMenuAvatar />
         </div>
       </div>

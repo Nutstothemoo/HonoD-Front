@@ -10,7 +10,7 @@ export default async function DashBoard() {
 
   return (
     <>
-      <div className='flex flex-col gap-3'>This is the dashboard</div>
+      <div className='flex flex-col gap-3'>Discover Our Latest Fueg Event</div>
       <EventList events={events}/>
     </>
   );

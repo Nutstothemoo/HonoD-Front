@@ -18,7 +18,7 @@ interface EventListProps {
 }
 
 const EventList: React.FC<EventListProps> = ({ events }) => (
-  <main className="w-full md:px-10 lg:px-20 mx-auto flex flex-wrap ">
+  <main className=" items-center justify-center w-full md:px-10 lg:px-20 mx-auto flex flex-wrap ">
     {events.map((event) => (
         <EventCard key={event._id} event={event} />
     ))}
