@@ -13,7 +13,7 @@ const TicketCard: React.FC<TicketProps> = ({ ticket }) => {
   const decrement = () => setQuantity(quantity > 0 ? quantity - 1 : 0);
 
   return (
-    <div key={ticket._id} className="w-full shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
+    <div key={ticket._id} className="border-white  w-full h-150 shadow-md rounded px-6 pt-8 pb-8 mb-4 flex flex-col my-2">
       <p className="font-bold text-xl mb-2">Ticket Name: <span className="font-normal">{ticket.ticket_name}</span></p>
       <p className="font-bold text-xl mb-2">Price: <span className="font-normal">{ticket.price}</span></p>
       <div className="flex items-center mt-4">

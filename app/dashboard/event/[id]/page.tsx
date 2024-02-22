@@ -22,7 +22,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   const tagNames = event.tags ? event.tags.map(tag => tag.name) : [];
 
   return (
-    <div className='flex flex-col md:flex-row'>
+    <div className='border-white flex flex-col md:flex-row'>
       <div className='w-full md:w-1/2'>
         <h1 className="text-4xl font-bold mb-4">{event?.name}</h1>
         <DealerComponent dealer={event?.dealer} />

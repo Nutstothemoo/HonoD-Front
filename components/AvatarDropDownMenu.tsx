@@ -34,7 +34,7 @@ export default function DropdownMenuAvatar() {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="/event" className="my-1 text-sm font-medium md:mx-4 md:my-0">
+            <Link href="/dashboard/event/dealer" className="my-1 text-sm font-medium md:mx-4 md:my-0">
               Event Manager
             </Link>
           </DropdownMenuItem>

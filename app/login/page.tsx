@@ -1,4 +1,9 @@
-// `app/page.tsx` is the UI for the `/` URL
+import RevolutionaryTicketSection from '@/components/hero.client';
+
 export default function Login() {
-  return <h1>Hello, Login!</h1>
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">  
+      <RevolutionaryTicketSection /> 
+    </main>
+  );  
 }

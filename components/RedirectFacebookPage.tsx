@@ -15,7 +15,6 @@ const RedirectFacebookPage = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !hasRequested) {
-      console.log('hasRequested is false');
       let code, state;
       code = searchParams?.get('code') ?? '';
       state = searchParams?.get('state') ?? '';  

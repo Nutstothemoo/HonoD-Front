@@ -20,10 +20,10 @@ const RedirectFacebookPage = () => {
         if (response.status === 200) {
           const data = await response.json(); 
           localStorage.setItem('user',JSON.stringify(data.user));;
-          router.push('/dashboard');
+          router.push('/');
           toast.success('Vous êtes connecté');
         } else {
-          router.push('/');
+          router.push('/login');
           toast.error('Une erreur est survenue');          
         }
     };

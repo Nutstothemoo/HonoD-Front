@@ -8,9 +8,9 @@ type TicketSectionProps = {
 export const TicketSection: React.FC<TicketSectionProps> = ({ tickets }) => {
   if (!tickets) return <p>No tickets available.</p>;
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col border-solid">
       {tickets.map((ticket) => (
-        <TicketCard key={ticket._id} ticket={ticket}  />
+        <TicketCard key={ticket._id} ticket={ticket}   />
       ))}
     </div>
   );

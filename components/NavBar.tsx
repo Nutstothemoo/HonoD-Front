@@ -1,9 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
-import Badge from './Badge';
 import DropdownMenuAvatar from '@/components/AvatarDropDownMenu';
 
-function Navbar() {
+interface NavbarProps {
+  isAuthenticated: boolean;
+}
+
+
+const Navbar: React.FC<NavbarProps> = ({ isAuthenticated})=> {
   return (
     <nav className="top-0 fixed w-full shadow">
       <div className="container mx-auto px-6 py-3 md:flex md:justify-between md:items-center">
@@ -25,10 +29,19 @@ function Navbar() {
             </Link>
           </div>
         </div>
-
-        <div className='absolute top-3 right-2'>
-        <DropdownMenuAvatar />
-        </div>
+        {isAuthenticated ? (
+          <div className='absolute top-3 right-2'>
+            <DropdownMenuAvatar />
+          </div>
+        ) : (
+          <div className='absolute top-3 right-2'>
+            <Link href="/login">
+              <a className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                Login
+              </a>
+            </Link>
+          </div>
+        )}
       </div>
     </nav>
   );

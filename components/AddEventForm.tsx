@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Form,
   FormControl,
@@ -7,20 +9,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/app/button"
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { Switch } from "@/components/ui/switch"
 import axios from "axios"
 import { toast } from "sonner"
-
+import { DatePicker1Presentation } from "./DatePicker"
 
 interface EventData {
   Country: string;
@@ -38,29 +45,29 @@ interface EventData {
 }
 
 const schema = z.object({
-  _id: z.string(),
-  slug: z.string(),
-  startTime: z.number(),
-  // endTime: z.number(),
-  // description: z.string(),
-  // addressVisibility: z.string(),
-  // geolocation_id: z.string(),
-  // isFestival: z.boolean(),
-  // name: z.string(),
-  // featuredText: z.string(),
-  // artworks: z.array(z.object({
-  // })),
-  // cancelledAt: z.number().optional(),
-  // currency: z.string(),
-  // tags: z.array(z.object({
-  // })),
-  // dealer_id: z.string(),
-  // launchedAt: z.number(),
-  // isSoldOut: z.boolean(),
-  // minTicketPrice: z.number(),
-  // created_at: z.date(),
-  // updated_at: z.date(),
-});
+  startTime: z.date(),
+  endTime: z.date(),
+  addressVisibility: z.string(),
+  timezone: z.string(),
+  description: z.string(),
+  geolocation: z.object({
+    latitude: z.number(),
+    longitude: z.number(),
+    address: z.string(),
+    city: z.string(),
+    country: z.string(),
+  }),
+  isFestival: z.boolean(),
+  name: z.string(),
+  featuredText: z.string(),
+  artworks: z.array(z.object({
+  })),
+  currency: z.string(),
+  tags: z.array(z.object({
+  })),
+  launchedAt: z.date(),
+  isSoldOut: z.boolean(),
+  });
 
 export function AddEventForm({onBackClick}:any) {
   const form = useForm<EventData>({
@@ -72,23 +79,16 @@ export function AddEventForm({onBackClick}:any) {
       if (response.status === 200) {
         toast.success("Connected");
       } else {
-        toast.error("An error occurred");
+        toast.error("Event not created, an error occurred");
       }
-      console.log(response.data);
-      
     } catch (error) {
-      console.error(error);
+      toast.error("Error connecting to the server");
     }
   };
   
   return (
     <>
-    <div className="flex flex-row">
-    <Button  
-    onClick={onBackClick}
-    style={{ borderRadius: '50%', width: '90px', height: '90px', fontWeight: 'bold' }}
-    className="block glow  hover:scale-110 transform transition duration-200 ease-in-out"        
-    type="submit"> </Button>
+    <div className="flex flex-row border-white">
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
@@ -98,11 +98,8 @@ export function AddEventForm({onBackClick}:any) {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="nom..." {...field} />
+                <Input placeholder="" {...field} />
               </FormControl>
-              <FormDescription>
-                This is the name of your event.
-              </FormDescription>
               <FormMessage className="text-red-500" />
             </FormItem>
           )}
@@ -115,26 +112,21 @@ export function AddEventForm({onBackClick}:any) {
                 <FormLabel>Description</FormLabel>
                 <FormControl>
                 <Textarea placeholder="Describe your event" {...field} />
-                {/* <Input placeholder="Describe your event..." {...field} /> */}
                 </FormControl>
                 <FormMessage className="text-red-500" />
               </FormItem>
             )}
             />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DateTimePicker']}>
-                    <DateTimePicker 
-                      className="text-white"
+                    <DateTimePicker
+                      className="rounded-lg shadow-sm p-3"
                       label="Date et heures de Début" 
                       />
-                  </DemoContainer>
                 </LocalizationProvider>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DateTimePicker']}>
                     <DateTimePicker 
-                      className="text-white"
-                      label="Date et heures de fin" />
-                  </DemoContainer>
+                      className="color-white rounded-lg shadow-sm p-3"
+                    label="Date et heures de fin" />
                 </LocalizationProvider>
                 <FormField
                     control={form.control}
@@ -143,7 +135,7 @@ export function AddEventForm({onBackClick}:any) {
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                         <div className="space-y-0.5">
                     <FormDescription>
-                      Votre soirée est t elle un festival ?
+                      is your Event a festival?
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -153,64 +145,38 @@ export function AddEventForm({onBackClick}:any) {
                     />
                   </FormControl>
                 </FormItem>
-              )}
-            />
-
-<FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
+                )}
+                />
+          <FormField
+          control={form.control}
+          name="addressVisibility"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Adresse visibility
+              </FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                <Textarea placeholder="Describe your event" {...field} />
-                {/* <Input placeholder="Describe your event..." {...field} /> */}
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a verified email to display" />
+                  </SelectTrigger>
                 </FormControl>
-                <FormMessage className="text-red-500" />
-              </FormItem>
-            )}
-            />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DateTimePicker']}>
-                    <DateTimePicker 
-                      label="Date et heures de Début" 
-                      />
-                  </DemoContainer>
-                </LocalizationProvider>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DateTimePicker']}>
-                    <DateTimePicker 
-                      label="Date et heures de fin" />
-                  </DemoContainer>
-                </LocalizationProvider>
-                <FormField
-                    control={form.control}
-                    name="isFestival"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                        <div className="space-y-0.5">
-                    <FormDescription>
-                      Votre soirée est t elle un festival ?
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            
-
-    </form>
+                <SelectContent>
+                  <SelectItem value="private"> private</SelectItem>
+                  <SelectItem value="public"> public </SelectItem>
+                  <SelectItem value="public 24h"> public 24h</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                Choose the visibility of the address
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+          />
+      </form>
     </Form>
-    <Button  
-        style={{ borderRadius: '50%', width: '90px', height: '90px', fontWeight: 'bold' }}
-        className="block glow  hover:scale-110 transform transition duration-200 ease-in-out"        
-        type="submit"> 
-    </Button>
+    <DatePicker1Presentation />
     </div>
     </>
   )
