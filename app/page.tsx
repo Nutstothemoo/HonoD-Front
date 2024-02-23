@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import DropdownMenuAvatar from '@/components/AvatarDropDownMenu';
 import EventList from '@/components/EventList';
 import Navbar from '@/components/NavBar';
 import Footer from '@/components/Footer';

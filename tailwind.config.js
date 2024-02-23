@@ -23,6 +23,11 @@ module.exports = {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       colors: {
+        maincolor: "#fc9e50",
+        secondcolor: "#f14e43",
+        thirdcolor: "#920201",
+        redcolor: "#920201",
+        darkcolor: "#29292b",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

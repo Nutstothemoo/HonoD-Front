@@ -19,7 +19,7 @@ export default function DropdownMenuAvatar() {
             <Badge />
           </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 z-30">
+      <DropdownMenuContent className="w-56 z-30 bg-darkcolor rounded-3xl rounded-tr-none">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>

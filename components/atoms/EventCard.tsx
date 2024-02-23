@@ -19,7 +19,7 @@ const EventCard: FC<EventCardProps> = ({ event }) => {
   const router = useRouter();
   
   const goToEventPage = () => {
-    router.push(`/dashboard/event/${event._id}`);
+    router.push(`/Event/${event._id}`);
   };
 
   const tagNames = event.tags ? event.tags.map(tag => tag.name) : [];
@@ -54,7 +54,7 @@ const EventCard: FC<EventCardProps> = ({ event }) => {
   return (
     <a    
       onClick={goToEventPage}
-      className="p-2 w-full md:w-3/4 lg:w-1/2 xl:w-1/3 h-full flex flex-col justify-center cursor-pointer items-center text-center gap-4 border-2 border-gray-200 rounded-md">
+      className="p-3 bg-darkcolor  bg-gradient-to-br from-darkcolor to-darkcolor border-black hover:scale-105 transition-transform duration-200 ease-in-out w-full md:w-3/4 lg:w-1/2 xl:w-1/3 h-full m-2 flex flex-col justify-center cursor-pointer items-center text-center gap-4 border-2 rounded-2xl">
       <AspectRatio ratio={16 / 9}>
         <Image 
           src={event.thumbnailUrl ?? ''} 
@@ -66,13 +66,15 @@ const EventCard: FC<EventCardProps> = ({ event }) => {
       </AspectRatio>
       <h3 className="text-xl font-semibold">{event.title}</h3>
       <h3 className=''>{event.dealer}</h3>
-      <div className='flex flex-row gap-2 '>      
-      <p className="text-sm text-gray-500">{getEventStatus()}</p>
-        <p className="text-sm text-gray-500">{event.minTicketPrice}€</p>
+      <div className='flex flex-row gap-40 '>      
+      <p className="text-sm text-gray-200">{getEventStatus()}</p>
+        <p className="text-sm text-gray-300">{event.minTicketPrice}€</p>
       </div>
       <div className="flex flex-wrap gap-2">
-        {tagsToShow.map((tag, index) => (
-          <Badge className='rounded-lg' key={index}>{tag}</Badge> 
+        {tagsToShow.map((tag, index) => (          
+            <Badge className='bg-secondcolor  hover:scale-105 last:rounded-2xl' key={index}>
+              {tag}
+              </Badge> 
         ))}
         {remainingTags > 0 && <Badge>{remainingTags}+</Badge> }
       </div>
