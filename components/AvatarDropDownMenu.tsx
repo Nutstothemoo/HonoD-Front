@@ -10,11 +10,20 @@ import {
 } from "@/components/ui/dropdown-menu"
 import Badge from "./Badge"
 import Link from "next/link";
+import { cookies } from 'next/headers'
+import {useRouter} from 'next/router'
 
 export default function DropdownMenuAvatar() {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await deleteCookie('auth_token');
+    router.push('/login');
+  };
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>          
+      <DropdownMenuTrigger className="rounded-full" asChild>          
           <button>
             <Badge />
           </button>
@@ -24,17 +33,17 @@ export default function DropdownMenuAvatar() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link href="/profile" className="my-1 text-sm font-medium md:mx-4 md:my-0">
-              Profile
+            <Link href="/dashboard/profil" className="my-1 text-sm font-medium md:mx-4 md:my-0">
+              Profil
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Link href="/event" className="my-1 text-sm font-medium md:mx-4 md:my-0">
-              My tickets
+              Ticket Manager
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="/dashboard/event/dealer" className="my-1 text-sm font-medium md:mx-4 md:my-0">
+            <Link href="/event/dealer" className="my-1 text-sm font-medium md:mx-4 md:my-0">
               Event Manager
             </Link>
           </DropdownMenuItem>
@@ -45,7 +54,7 @@ export default function DropdownMenuAvatar() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

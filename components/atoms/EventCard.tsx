@@ -28,19 +28,26 @@ const EventCard: FC<EventCardProps> = ({ event }) => {
 
 
   const now = dayjs();
+  // const startTime = dayjs.unix(event.startTime / 1000);
+  // const endTime = dayjs.unix(event.endTime / 1000);
   const startTime = dayjs(event.startTime);
+  console.log(startTime.format('dddd D MMM YYYY à HH:mm'))
   const endTime = dayjs(event.endTime);
   dayjs.extend(duration); 
 
   const getEventStatus = () => {
-    dayjs.locale('fr'); 
+    dayjs.locale('fr');
+    console.log(`Bientôt || ${startTime.format('DD/MM/YYYY HH:mm')}`)
+    // console.log("now ",now)
+    console.log("bool",now.isAfter(endTime))
     if (now.isAfter(endTime)) {
       return 'Terminé';
     } else if (now.isAfter(startTime)) {
       const remaining= dayjs.duration(endTime.diff(now));
       return `En cours || ${remaining.hours()} heures restantes`;
     } else if (now.add(1, 'hour').isAfter(startTime)) {
-      return `Bientôt || ${startTime.format('HH:mm')}`;
+      return `Bientôt || ${startTime.format('DD/MM/YYYY HH:mm')}`;
+      // return `Bientôt || ${startTime.format('HH:mm')}`;
     } else {
       const testduration = dayjs.duration(endTime.diff(startTime));
       if (testduration.hours() > 24) {

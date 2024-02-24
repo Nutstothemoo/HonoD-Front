@@ -39,7 +39,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <div className="mt-4">
           <h2 className="text-2xl font-bold mb-2">Artworks:</h2>
           <div className="grid grid-cols-3 gap-4">
-            {event?.artworks.map((artwork:any, index:any) => (
+            {event?.artworks?.map((artwork:any, index:any) => (
               <div key={index}>
                 <img src={artwork.originalUrl} alt={artwork.id} />
               </div>
@@ -53,7 +53,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             <h2>Vibe:</h2>
             <ul>
               {tagNames.map((tag:any, index:any) => (
-                  <Badge className='rounded-lg' key={index}>{tag}</Badge> 
+                  <Badge className='rounded-3xl' key={index}>{tag}</Badge> 
               ))}
             </ul>
           </div>

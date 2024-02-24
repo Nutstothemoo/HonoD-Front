@@ -21,10 +21,10 @@ const Button: React.FC<ButtonProps> = ({ text, onClick , size}) => {
 
   return (
     <div 
-    className='block  glow text-white rounded-full hover:scale-105 transition duration-300 '
+    className='w-80 text-white rounded-full hover:scale-105 transition duration-300 '
       >
       <button 
-      className={`w-full h-full ${sizeClasses}`}
+      className={`block h-15 glow ${sizeClasses} w-30`}
       onClick={onClick}>
       {text}
     </button>

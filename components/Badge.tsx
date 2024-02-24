@@ -14,7 +14,7 @@ export default function Badge() {
   }, []);
 
   return (
-    <Avatar className='rounded-full'>
+    <Avatar className='rounded-2xl'>
       {user && user.avatar && <AvatarImage src={user.avatar} />}
       {user && user.firstname && <AvatarFallback>{user.firstname[0] + user.lastname[0]}</AvatarFallback>}
     </Avatar>

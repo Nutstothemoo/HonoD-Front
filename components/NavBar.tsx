@@ -9,7 +9,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ isAuthenticated})=> {
   return (
-    <nav className="top-0 fixed w-full shadow">
+    <nav className="top-0 fixed w-full shadow bg-black opacity-90">
       <div className="container mx-auto px-6 py-3 md:flex md:justify-between md:items-center">
         <div className="flex justify-between items-center">
           <div>
@@ -20,14 +20,14 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated})=> {
         </div>
 
         <div className="sm:hidden">
-          <div className="flex flex-col md:flex-row md:mx-6">
+          {/* <div className="flex flex-col md:flex-row md:mx-6">
             <Link href="/dashboard/events" className="my-1 text-sm font-medium md:mx-4 md:my-0">
             Events
             </Link>
             <Link href="/dashboard/ticket" className="my-1 text-sm font-medium md:mx-4 md:my-0">
               Ticket
             </Link>
-          </div>
+          </div> */}
         </div>
         {isAuthenticated ? (
           <div className='absolute top-3 right-2'>

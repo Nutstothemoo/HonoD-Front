@@ -9,8 +9,8 @@ export interface Event {
   slug: string;
   dealer?: string;  
   minTicketPrice?:number;
-  startTime: string; // Add this line
-  endTime: string; //  
+  startTime: any; // Add this line
+  endTime: any; //  
 }
 
 interface EventListProps {
