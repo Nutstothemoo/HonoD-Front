@@ -2,9 +2,9 @@ import { ProfilTabs } from '@/components/ProfilTabs'
 import AvatarUploadPage from '@/components/UploadAvatar'
 import React from 'react'
 
-function profil() {
+function Profil() {
   return (
-    <section>profil
+    <section>
       <div className="flex flex-col items-center justify-between pt-24">
         <div className='flex flex-col gap-3'>Discover Our Latest Fueg Event</div>
             <AvatarUploadPage />
@@ -14,4 +14,4 @@ function profil() {
   )
 }
 
-export default profil
+export default Profil

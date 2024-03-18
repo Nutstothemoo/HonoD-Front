@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
-const RedirectFacebookPage = () => {
+const RedirectFacebookPage = async () => {
   const router = useRouter();
   const searchParams = useSearchParams() 
   let code :any, state: any;
@@ -12,14 +12,12 @@ const RedirectFacebookPage = () => {
   code = searchParams?.get('code') ?? '';
   state = searchParams?.get('state') ?? '';
 
-  useEffect(() => {
-    const fetchData = async () => {
+
+  const fetchData = async () => {
         const backendURL = `${process.env.NEXT_PUBLIC_API_URL}/facebook/callback?code=${code}&state=${state}`;
         const response = await fetch(backendURL);
-
-        if (response.status === 200) {
+        if (response.ok) {          
           const data = await response.json(); 
-          localStorage.setItem('user',JSON.stringify(data.user));;
           router.push('/');
           toast.success('Vous êtes connecté');
         } else {
@@ -28,8 +26,8 @@ const RedirectFacebookPage = () => {
         }
     };
 
-    fetchData();
-    }, );
+  await fetchData();
+
 
   return (
     <div>

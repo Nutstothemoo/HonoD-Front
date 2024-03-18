@@ -6,12 +6,11 @@ import Button from './atoms/Button';
 import { motion } from 'framer-motion';
 import {toast} from 'sonner';
 
-function LoginNav() {
+function LoginNav( ) {
   const [showLoginForm, setShowLonginForm] = useState(false);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [showFacebookLogin, setShowFacebookLogin] = useState(false);
   const [showGoogleLogin, setShowGoogleLogin] = useState(false);  
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showButtons, setShowButtons] = useState(true);
 
   const handleGoogleLogin = async () => {
@@ -69,7 +68,7 @@ function LoginNav() {
 
   return (
     <>
-    {!isLoggedIn && (
+    {!false && (
       <section className="text-white py-16">
         <motion.div 
         className="container mx-auto text-center"

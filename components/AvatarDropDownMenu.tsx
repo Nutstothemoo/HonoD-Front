@@ -10,15 +10,16 @@ import {
 } from "@/components/ui/dropdown-menu"
 import Badge from "./Badge"
 import Link from "next/link";
-import { cookies } from 'next/headers'
-import {useRouter} from 'next/router'
+import {useRouter} from 'next/navigation'
 
-export default function DropdownMenuAvatar() {
+
+
+export default function DropdownMenuAvatar(SessionData :any) {
+  console.log(SessionData, "SessionData Arrived In AvatarDropDownMenu")
   const router = useRouter();
-
   const handleLogout = async () => {
-    await deleteCookie('auth_token');
     router.push('/login');
+    
   };
 
   return (

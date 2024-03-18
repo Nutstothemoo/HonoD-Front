@@ -3,13 +3,13 @@ import Link from 'next/link';
 import DropdownMenuAvatar from '@/components/AvatarDropDownMenu';
 
 interface NavbarProps {
-  isAuthenticated: boolean;
+  SessionData: any;
 }
 
 
-const Navbar: React.FC<NavbarProps> = ({ isAuthenticated})=> {
+const Navbar: React.FC<NavbarProps> = ({ SessionData})=> {
   return (
-    <nav className="top-0 fixed w-full shadow bg-black opacity-90">
+    <div className="top-0 fixed w-full shadow bg-black opacity-90">
       <div className="container mx-auto px-6 py-3 md:flex md:justify-between md:items-center">
         <div className="flex justify-between items-center">
           <div>
@@ -20,30 +20,29 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated})=> {
         </div>
 
         <div className="sm:hidden">
-          {/* <div className="flex flex-col md:flex-row md:mx-6">
+          <div className="flex flex-col md:flex-row md:mx-6">
             <Link href="/dashboard/events" className="my-1 text-sm font-medium md:mx-4 md:my-0">
             Events
             </Link>
             <Link href="/dashboard/ticket" className="my-1 text-sm font-medium md:mx-4 md:my-0">
               Ticket
             </Link>
-          </div> */}
+          </div>
         </div>
-        {isAuthenticated ? (
+        {SessionData ? (
           <div className='absolute top-3 right-2'>
-            <DropdownMenuAvatar />
+            <DropdownMenuAvatar SessionData= {SessionData}/>
           </div>
         ) : (
           <div className='absolute top-3 right-2'>
-            <Link href="/login">
-              <a className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                Login
-              </a>
+            <Link href="/login"
+                  className="w-30 z-30 bg-darkcolor font-bold md:text-xl rounded-full">
+                Login      
             </Link>
           </div>
         )}
       </div>
-    </nav>
+    </div>
   );
 }
 
