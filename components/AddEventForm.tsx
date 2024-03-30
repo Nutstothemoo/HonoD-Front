@@ -27,7 +27,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { Switch } from "@/components/ui/switch"
 import axios from "axios"
 import { toast } from "sonner"
-import { DatePicker1Presentation } from "./DatePicker"
+// import { DatePicker1Presentation } from "./DatePicker"
 
 interface EventData {
   Country: string;
@@ -176,7 +176,7 @@ export function AddEventForm({onBackClick}:any) {
           />
       </form>
     </Form>
-    <DatePicker1Presentation />
+    {/* <DatePicker1Presentation /> */}
     </div>
     </>
   )
