@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+type Ticket = {
+    id: number;
+    name: string;
+    price: string;
+  };
+
 function TicketAdd() {
-    const [tickets, setTickets] = useState([]);
+    const [tickets, setTickets] = useState<Ticket[]>([]);
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
 
