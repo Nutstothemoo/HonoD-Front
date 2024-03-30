@@ -5,9 +5,11 @@ import Footer from '@/components/Footer';
 import { getSessionData } from './actions';
 import { cookies } from 'next/headers';
 
+
 export default async function DashBoard() {
   const events = await fetchEvents();
   const sessionData = await getSessionData()
+
   const cookieStore = cookies()
   cookieStore.getAll().map((cookie) => (
     console.log(cookie)

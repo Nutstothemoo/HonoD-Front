@@ -46,6 +46,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             ))}
           </div>
         </div>
+        
         <div>
         {
           tagNames.length > 0 && 
@@ -59,6 +60,9 @@ export default async function Page({ params }: { params: { id: string } }) {
           </div>
         }
         </div>
+        import ReactPlayer from 'react-player';
+
+        {/* <ReactPlayer url={event?.videoUrl} /> */}
       </div>
       <div className='w-full md:w-1/3'>
         <TicketSection tickets={tickets} />
