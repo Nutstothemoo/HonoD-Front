@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { number } from 'zod';
 
 type TicketSectionProps = {
   tickets: Ticket[];
@@ -19,7 +20,10 @@ export const TicketSection: React.FC<TicketSectionProps> = ({ tickets }) => {
     <ScrollArea className="flex flex-col border">
       <Accordion type="single" collapsible className="w-full">
       {tickets.map((ticket, index) => (
-        <TicketCard number={index} ticket={ticket} />
+        <div key={index}>
+          <TicketCard number={index} ticket={ticket} /> 
+          </div>
+        
       ))}
       </Accordion>
     </ScrollArea>

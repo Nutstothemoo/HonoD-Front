@@ -5,7 +5,7 @@ import GeolocationComponent from '@/components/Geolocation';
 import DealerComponent from '@/components/Dealer';
 import { TicketSection } from '@/components/TicketSection';
 import { Badge } from '@/components/ui/badge';
-
+import ReactPlayer from 'react-player';
 
 export default async function Page({ params }: { params: { id: string } }) {
   
@@ -61,9 +61,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           </div>
         }
         </div>
-        import ReactPlayer from 'react-player';
-
-        {/* <ReactPlayer url={event?.videoUrl} /> */}
+        <ReactPlayer url={event?.videoUrl} />
       </div>
       <div className='w-full md:w-1/3'>
         <TicketSection tickets={tickets} />
