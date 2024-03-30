@@ -19,7 +19,7 @@ const TicketCard: React.FC<TicketProps> = ({ ticket, number }) => {
   const decrement = () => setQuantity(quantity > 0 ? quantity - 1 : 0);
 
   return (
-    <AccordionItem className="rounded-3xl" value={`item-${number}`}>
+    <AccordionItem key={number} className="rounded-3xl" value={`item-${number}`}>
     <div key={ticket._id} className=" w-full h-150 shadow-md rounded-3xl px-6 pt-8 flex flex-row justify-between my-2">
     <p className={`font-bold ${ticket.stock > 0 ? 'text-white' : 'text-gray-400'}`}>
     <span className="font-normal">{ticket.price !== undefined ? (quantity > 0 ? ticket.price * quantity : ticket.price) + ' €' : 'Non disponible'}</span>

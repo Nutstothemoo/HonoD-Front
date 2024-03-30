@@ -6,6 +6,7 @@ import DealerComponent from '@/components/Dealer';
 import { TicketSection } from '@/components/TicketSection';
 import { Badge } from '@/components/ui/badge';
 
+
 export default async function Page({ params }: { params: { id: string } }) {
   
   const [event, tickets] = await Promise.all([
@@ -41,7 +42,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           <div className="grid grid-cols-3 gap-4">
             {event?.artworks?.map((artwork:any, index:any) => (
               <div key={index}>
-                <img src={artwork.originalUrl} alt={artwork.id} />
+                <Image src={artwork.originalUrl} alt={artwork.id} />
               </div>
             ))}
           </div>
