@@ -8,30 +8,30 @@ const CheckoutForm: React.FC = () => {
 
     try {
       // Create a Checkout Session.
-      const checkoutSession: Stripe.Checkout.Session = await fetchPostJSON(
-        '/api/checkout_sessions',
-        { amount: input.customDonation },
-      );
+      // const checkoutSession: Stripe.Checkout.Session = await fetchPostJSON(
+      //   '/api/checkout_sessions',
+      //   { amount: input.customDonation },
+      // );
 
       // Handle server-side error
-      if ((checkoutSession as any).statusCode === 500) {
-        console.error((checkoutSession as any).message);
-        return;
-      }
+      // if ((checkoutSession as any).statusCode === 500) {
+      //   console.error((checkoutSession as any).message);
+      //   return;
+      // }
 
       // Redirect to Checkout.
-      const stripe = await getStripe();
-      const { error } = await stripe!.redirectToCheckout({
-        // Pass the id from the Checkout Session creation API response
-        sessionId: checkoutSession.id,
-      });
+      // const stripe = await getStripe();
+      // const { error } = await stripe!.redirectToCheckout({
+      //   // Pass the id from the Checkout Session creation API response
+      //   sessionId: checkoutSession.id,
+      // });
 
       // If `redirectToCheckout` fails due to a browser or network
       // error, display the localized error message to your customer
       // using `error.message`.
-      if (error) {
-        console.warn(error.message);
-      }
+      // if (error) {
+      //   console.warn(error.message);
+      // }
     } catch (error) {
       // Handle other types of errors (e.g., network issues)
       console.error('An error occurred:', error);
