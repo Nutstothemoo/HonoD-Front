@@ -6,7 +6,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import Button from './Button';
 
 type TicketProps = {
   ticket: Ticket;
@@ -41,8 +40,8 @@ const TicketCard: React.FC<TicketProps> = ({ ticket, number }) => {
     </div>
       <AccordionContent>
         {ticket?.ticket_name}
-        <Button size="small" text={`Buy`} onClick={() => console.log('buy')}>
-        </Button>
+        {/* <Button size="small" text={`Buy`} onClick={() => console.log('buy')}>
+        </Button> */}
       </AccordionContent>
     </AccordionItem>
   );
