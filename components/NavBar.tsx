@@ -9,7 +9,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ SessionData})=> {
   return (
-    <div className="top-0 fixed w-full shadow bg-black opacity-90">
+    <div className="z-30 top-0 fixed w-full shadow bg-black bg-opacity-50">
       <div className="container mx-auto px-6 py-3 md:flex md:justify-between md:items-center">
         <div className="flex justify-between items-center">
           <div>

@@ -8,7 +8,7 @@ export default function DashboardLayout({
 }) {
   return (
     <>
-      <main className="flex flex-col items-center justify-between pt-24">
+      <main className="flex flex-col items-center justify-between">
         {children}
       <Toaster />
       </main>

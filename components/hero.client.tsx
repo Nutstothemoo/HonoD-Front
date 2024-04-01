@@ -41,8 +41,10 @@ function RevolutionaryTicketSection() {
           <div className="p-6 rounded-lg block glow">
             <h3 className="text-xl font-semibold">Expériences uniques</h3>
             <p className="mt-2">Vivez des événements inoubliables avec nos billets exclusifs.</p>
-          </div>
-      <Button text="Se connecter" onClick={handleClick} size="large"/>
+          </div>          
+        </div>
+        <div className="flex items-center justify-center mt-6">
+        <Button text="Se connecter" onClick={handleClick} size="large"/>
         </div>
     </div>
     </motion.section>

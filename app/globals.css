@@ -5,9 +5,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
 
 :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb:  var(--tw-color-zinc-900);
+    /* --background-start-rgb: 0, 0, 0; */
+    --background-end-rgb: var(--tw-color-zinc-950);
     --color-primary: var(--tw-color-green-500);
     --color-background: var(--tw-color-zinc-950);
     --color-foreground: var(--tw-color-zinc-900);
@@ -71,7 +71,7 @@ body {
 * {
   margin:0;
   padding:0;
-  font-size: 18px;
+  font-size: 16px;
 
 }
 
@@ -91,7 +91,7 @@ a {
   padding: 1rem;
   margin: 10% auto;
   border-radius: 30px;
-  border: 1px solid whitesmoke;
+  /* border: 1px solid whitesmoke; */
 }
 
 .glow::before, glow::after {

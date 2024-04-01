@@ -94,20 +94,25 @@ function LoginNav( ) {
             initial={{ opacity: 0, x: -100 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 100 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="mt-9 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="mt-9 gap-6">
             {showButtons ? (
               <>          
               <motion.div 
                 initial={{ opacity: 0, x: -100 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 100 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}>
-                <Button size="medium" text="Google" onClick={handleGoogleLogin} />
-                <Button size="medium" text="Meta" onClick={handleFacebookLogin} />
-                <Button size="medium" text="Login" onClick={handleInternalLogin} />
-                <Button size="medium" text="Register" onClick={handleInternalRegister} />
-                </motion.div>
+                transition={{ duration:1, ease: "easeOut" }}
+                className="flex flex-col sm:flex-row sm:flex-wrap justify-between">
+                <div className="flex flex-col sm:flex-col gap-6 mb-6 sm:mb-0">
+                  <Button size="medium" text="Google" onClick={handleGoogleLogin} />
+                  <Button size="medium" text="Meta" onClick={handleFacebookLogin} />
+                </div>
+                <div className="flex flex-col sm:flex-col gap-6">
+                  <Button size="medium" text="Login" onClick={handleInternalLogin} />
+                  <Button size="medium" text="Register" onClick={handleInternalRegister} />
+                </div>
+              </motion.div>
               </>
             ) : (
               ""

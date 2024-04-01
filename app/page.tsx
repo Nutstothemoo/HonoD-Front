@@ -4,6 +4,7 @@ import Navbar from '@/components/NavBar';
 import Footer from '@/components/Footer';
 import { getSessionData } from './actions';
 import { cookies } from 'next/headers';
+import { EventSection } from '@/components/EventSection';
 
 
 export default async function DashBoard() {
@@ -16,12 +17,11 @@ export default async function DashBoard() {
   ))  
   return (
     <>
-      <main className="flex flex-col items-center justify-between pt-24">
-        <Navbar SessionData={sessionData} />
-        <div className='flex flex-col gap-3'>Discover Our Latest Fueg Event</div>
-        <EventList events={events}/>
-        <Footer />
+      <Navbar SessionData={sessionData} />
+      <main className="w-full min-h-screen bg-zinc-950 ">
+        <EventSection events={events} />
       </main>
+      <Footer />
     </>
   );
 }

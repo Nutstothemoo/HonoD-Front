@@ -2,7 +2,7 @@ import React from 'react';
 
 function Footer() {
   return (
-    <footer className="p-6 shadow-md w-full">
+    <footer className="p-6 shadow-md w-full bg-zinc-900 text-white">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-start md:items-center">
         <div>
           <h3 className="font-bold mb-2">Villes</h3>

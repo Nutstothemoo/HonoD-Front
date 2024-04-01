@@ -5,7 +5,7 @@ import GeolocationComponent from '@/components/Geolocation';
 import DealerComponent from '@/components/Dealer';
 import { TicketSection } from '@/components/TicketSection';
 import { Badge } from '@/components/ui/badge';
-import ReactPlayer from 'react-player';
+// import ReactPlayer from 'react-player';
 
 export default async function Page({ params }: { params: { id: string } }) {
   
@@ -24,6 +24,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <div className='w-full border-black bg-darkcolor flex flex-col md:flex-row '>
+      <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/80"></div>
       <div className='w-full md:w-2/3 flex flex-col items-center'>
         <h1 className="text-2xl font-bold mb-4">{event?.name}</h1>
         <DealerComponent dealer={event?.dealer} />
@@ -42,7 +43,11 @@ export default async function Page({ params }: { params: { id: string } }) {
           <div className="grid grid-cols-3 gap-4">
             {event?.artworks?.map((artwork:any, index:any) => (
               <div key={index}>
-                <Image src={artwork.originalUrl} alt={artwork.id} />
+                <Image                   
+                  width={16}
+                  height={9} 
+                  src={artwork.originalUrl} 
+                  alt={artwork.id} />
               </div>
             ))}
           </div>
@@ -61,7 +66,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           </div>
         }
         </div>
-        <ReactPlayer url={event?.videoUrl} />
+        {/* <ReactPlayer url={event?.videoUrl} /> */}
       </div>
       <div className='w-full md:w-1/3'>
         <TicketSection tickets={tickets} />

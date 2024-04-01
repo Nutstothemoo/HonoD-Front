@@ -14,7 +14,12 @@ const DealerComponent: React.FC<DealerProps> = ({ dealer }) => {
 
   return (
     <div className="flex items-center shadow-md rounded px-8 pt-6 pb-8 mb-4 my-2">        
-      <Image className="w-16 h-16 rounded-full mr-4" src={dealer.avatar} alt="Dealer Avatar" />
+      {/* <Image
+      width={5}
+      height={5}
+      className="w-16 h-16 rounded-full mr-4" 
+      src={dealer.avatar} 
+      alt="Dealer Avatar" /> */}
       <p className="font-bold text-xl"> Par <span className="font-normal">{dealer.dealerName}</span></p>
     </div>
   );
