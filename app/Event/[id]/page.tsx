@@ -23,8 +23,8 @@ export default async function Page({ params }: { params: { id: string } }) {
   const tagNames = event.tags ? event.tags.map((tag: { name: any; })=> tag.name) : [];
 
   return (
-    <div className='w-full border-black bg-darkcolor flex flex-col md:flex-row '>
-      <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/80"></div>
+    <div className='w-full text-white bg-zinc-950 flex flex-col md:flex-row '>
+      <div className="absolute top-0 inset-0 bg-gradient-to-t from-zinc-500 via-zinc-500/80"></div>
       <div className='w-full md:w-2/3 flex flex-col items-center'>
         <h1 className="text-2xl font-bold mb-4">{event?.name}</h1>
         <DealerComponent dealer={event?.dealer} />

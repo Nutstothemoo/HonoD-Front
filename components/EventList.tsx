@@ -45,19 +45,25 @@ const EventList: React.FC<EventListProps> = ({ events, delay, onMouseEnter, onMo
 
   return (
     <div className="relative">
-    <main className="z-10 items-center justify-center h-full w-4/5 rounded-xl bg-zinc-950 md:px-10 lg:px-20 mx-auto flex flex-wrap ">
+    <main className="z-10 items-center justify-center h-full w-4/5 rounded-xl md:px-10 lg:px-20 mx-auto flex flex-wrap ">
       <Carousel 
         plugins={[plugin.current]}
         onMouseEnter={plugin.current.stop}
         onMouseLeave={plugin.current.reset}
         className='w-11/12 rounded-lg'>
-        <CarouselContent className='-ml-1'>
+        <CarouselContent className='-ml-1 '>
           {events.map((event) => (
             <CarouselItem 
-              className="pl-1 bg-zinc-900 basis-1/1 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 p-4 transition-all rounded-2xl duration-300 border-none overflow-hidden shadow-lg hover:shadow-xl outline-none  w-full h-full m-2 flex flex-col justify-center cursor-pointer items-center text-center gap-4 border-2 bg-zinc-500/5 hover:bg-zinc-500/20 focus:bg-zinc-500/20" 
+              className="pl-1 bg-zinc-900 bg-opacity-100 basis-1/1 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 p-4 transition-all rounded-2xl duration-300 border-none overflow-hidden shadow-lg hover:shadow-xl outline-none  w-full h-full m-2 flex flex-col justify-center cursor-pointer items-center text-center gap-4 border-2 bg-zinc-500/5 hover:bg-zinc-500/20 focus:bg-zinc-500/20" 
               key={event._id}
-              onMouseEnter={() => onMouseEnter(event.color || 'zinc-300')}
-              onMouseLeave={onMouseLeave}>
+              onMouseEnter={() => {
+                console.log(event)
+                onMouseEnter(event.color || 'zinc-300')
+              }}              
+              onMouseLeave={() => {
+                console.log(event)
+                onMouseLeave()}}
+                >
               <EventCard event={event} />
             </CarouselItem>
           ))}

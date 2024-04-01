@@ -13,6 +13,7 @@ type TicketProps = {
 };
 
 const TicketCard: React.FC<TicketProps> = ({ ticket, number }) => {
+  
   const [quantity, setQuantity] = useState(0);
   const increment = () => setQuantity(quantity + 1);
   const decrement = () => setQuantity(quantity > 0 ? quantity - 1 : 0);

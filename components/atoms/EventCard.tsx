@@ -20,8 +20,7 @@ const EventCard: FC<EventCardProps> = ({ event }) => {
   const [isSelected, setIsSelected] = useState(false);
   const goToEventPage = () => {
     setIsSelected(!isSelected);
-
-    // router.push(`/Event/${event._id}`);
+    router.push(`/Event/${event._id}`);
   };
 
   const tagNames = event.tags ? event.tags.map(tag => tag.name) : [];

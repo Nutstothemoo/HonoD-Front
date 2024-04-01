@@ -9,7 +9,7 @@ interface EventSectionProps {
 
 export const EventSection: React.FC<EventSectionProps> = ({ events }) => {
   
-  const [hoverColor, setHoverColor] = useState('zinc-300');
+  const [hoverColor, setHoverColor] = useState('zinc-800');
   const [gradientDirection, setGradientDirection] = useState('tr');
   const handleMouseEnter = (color: string) => {
     console.log('color', color)
@@ -22,12 +22,10 @@ export const EventSection: React.FC<EventSectionProps> = ({ events }) => {
     setHoverColor('zinc-300');
   };
 return (
-  <div className="relative flex flex-col bg-zinc-950 pt-20 w-full items-center justify-between"> 
-      <div className={`z-0 absolute inset-x-0 top-0 h-1/3 w-screen bg-gradient-to-${gradientDirection} from-${hoverColor} via-${hoverColor}/90 ${gradientDirection === 'tr' ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500 ease-in-out`}>
-      </div>
-      <div className={`z-0 absolute inset-x-0 top-0 h-1/3 w-screen bg-gradient-to-${gradientDirection} from-${hoverColor} via-${hoverColor}/80 ${gradientDirection === 'tr' ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500 ease-in-out`}>
-      </div>
-      <div className={`z-0 absolute inset-x-0 top-0 h-1/3 w-screen bg-gradient-to-${gradientDirection === 'tr' ? 'tl' : 'tr'} from-${hoverColor} via-${hoverColor}/80 ${gradientDirection === 'tr' ? 'opacity-0' : 'opacity-100'} transition-opacity duration-500 ease-in-out`}>
+  <div className="z-0 relative flex flex-col bg-zinc-950 pt-20 w-full items-center justify-between"> 
+      <div className="z-1 absolute inset-x-0 top-0 h-1/3 w-screen">
+        <div className={`absolute inset-0 bg-gradient-to-tr from-zinc-950 via-blue-900 to-red-500 transition-opacity duration-1000 ease-in-out ${gradientDirection === 'tr' ? 'opacity-100' : 'opacity-0'}`}></div>
+        <div className={`absolute inset-0 bg-gradient-to-tl from-zinc-950 via-blue-900 to-red-500 transition-opacity duration-1000 ease-in-out ${gradientDirection === 'tr' ? 'opacity-0' : 'opacity-100'}`}></div>
       </div>
       <div className='relative z-3 text-white text-2xl text-center font-bold p-4'>Discover Our Latest Fueg Event
       </div>
