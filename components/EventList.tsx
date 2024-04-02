@@ -57,8 +57,7 @@ const EventList: React.FC<EventListProps> = ({ events, delay, onMouseEnter, onMo
               className="pl-1 bg-zinc-900 bg-opacity-100 basis-1/1 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 p-4 transition-all rounded-2xl duration-300 border-none overflow-hidden shadow-lg hover:shadow-xl outline-none  w-full h-full m-2 flex flex-col justify-center cursor-pointer items-center text-center gap-4 border-2 bg-zinc-500/5 hover:bg-zinc-500/20 focus:bg-zinc-500/20" 
               key={event._id}
               onMouseEnter={() => {
-                console.log(event)
-                onMouseEnter(event.color || 'zinc-300')
+                onMouseEnter(event.color || 'red')
               }}              
               onMouseLeave={() => {
                 console.log(event)
