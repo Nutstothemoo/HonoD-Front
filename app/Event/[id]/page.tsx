@@ -7,6 +7,8 @@ import { TicketSection } from '@/components/TicketSection';
 import { Badge } from '@/components/ui/badge';
 // import ReactPlayer from 'react-player';
 
+
+
 export default async function Page({ params }: { params: { id: string } }) {
   
   const [event, tickets] = await Promise.all([

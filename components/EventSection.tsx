@@ -9,23 +9,22 @@ interface EventSectionProps {
 
 export const EventSection: React.FC<EventSectionProps> = ({ events }) => {
   
-  const [hoverColor, setHoverColor] = useState('zinc-800');
+  const [hoverColor, setHoverColor] = useState('zinc');
   const [gradientDirection, setGradientDirection] = useState('tr');
   const handleMouseEnter = (color: string) => {
-    console.log('color', color)
-    setHoverColor('zinc-950');
+    setHoverColor(color);
     setGradientDirection(gradientDirection === 'tr' ? 'tl' : 'tr');
   };
 
   const handleMouseLeave = () => {
-    console.log("ccoucou")
-    setHoverColor('zinc-300');
+    setHoverColor('zinc-950');
   };
-return (
+  
+  return (
   <div className="z-0 relative flex flex-col bg-zinc-950 pt-20 w-full items-center justify-between"> 
       <div className="z-1 absolute inset-x-0 top-0 h-1/3 w-screen">
-        <div className={`absolute inset-0 bg-gradient-to-tr from-zinc-950 via-blue-900 to-red-500 transition-opacity duration-1000 ease-in-out ${gradientDirection === 'tr' ? 'opacity-100' : 'opacity-0'}`}></div>
-        <div className={`absolute inset-0 bg-gradient-to-tl from-zinc-950 via-blue-900 to-red-500 transition-opacity duration-1000 ease-in-out ${gradientDirection === 'tr' ? 'opacity-0' : 'opacity-100'}`}></div>
+        <div className={`absolute inset-0 bg-gradient-to-tr from-zinc-950 via-zinc-900 to-${hoverColor} transition-opacity duration-1000 ease-in-out ${gradientDirection === 'tr' ? 'opacity-100' : 'opacity-0'}`}></div>
+        <div className={`absolute inset-0 bg-gradient-to-tl from-zinc-950 via-zinc-900 to-${hoverColor} transition-opacity duration-1000 ease-in-out ${gradientDirection === 'tr' ? 'opacity-0' : 'opacity-100'}`}></div>
       </div>
       <div className='relative z-3 text-white text-2xl text-center font-bold p-4'>Discover Our Latest Fueg Event
       </div>

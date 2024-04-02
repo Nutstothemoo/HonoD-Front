@@ -46,6 +46,7 @@ const EventList: React.FC<EventListProps> = ({ events, delay, onMouseEnter, onMo
   return (
     <div className="relative">
     <main className="z-10 items-center justify-center h-full w-4/5 rounded-xl md:px-10 lg:px-20 mx-auto flex flex-wrap ">
+      {events &&
       <Carousel 
         plugins={[plugin.current]}
         onMouseEnter={plugin.current.stop}
@@ -71,6 +72,8 @@ const EventList: React.FC<EventListProps> = ({ events, delay, onMouseEnter, onMo
         <CarouselPrevious className='h-10 w-10 focus:text-white text-white border-zinc-900 bg-zinc-500/5 hover:bg-zinc-400/20 focus:bg-zinc-500/20'/>
         <CarouselNext className='h-10 w-10 text-white focus:text-white border-zinc-900 bg-zinc-500/5 hover:bg-zinc-400/20 focus:bg-zinc-500/20'/>
       </Carousel>
+      }
+      {!events && <div className='text-white '>No events found</div>}
     </main>
   </div>
   );
