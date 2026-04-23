@@ -1,7 +1,11 @@
 const BASE = process.env.NEXT_PUBLIC_VELOCE_URL ?? 'http://localhost:3001'
 
-async function get<T>(path: string): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, { cache: 'no-store' })
+interface RequestOptions {
+  signal?: AbortSignal
+}
+
+async function get<T>(path: string, options?: RequestOptions): Promise<T> {
+  const res = await fetch(`${BASE}${path}`, { cache: 'no-store', signal: options?.signal })
   if (!res.ok) throw new Error(`GET ${path} → ${res.status}`)
   return res.json()
 }
@@ -92,7 +96,7 @@ export interface VelocePlan {
 // ── Drivers ──────────────────────────────────────────────────────────────────
 
 export const driversApi = {
-  list: () => get<VeloceDriver[]>('/drivers'),
+  list: (options?: RequestOptions) => get<VeloceDriver[]>('/drivers', options),
   updatePosition: (id: string, body: { lng: number; lat: number; heading?: number; speed?: number }) =>
     patch<void>(`/drivers/${id}/position`, body),
 }
@@ -100,9 +104,11 @@ export const driversApi = {
 // ── Shipments ────────────────────────────────────────────────────────────────
 
 export const shipmentsApi = {
-  list: () => get<VeloceShipment[]>('/shipments'),
+  list: (options?: RequestOptions) => get<VeloceShipment[]>('/shipments', options),
   transition: (id: string, status: string) =>
     post<VeloceShipment>(`/shipments/${id}/transition`, { status }),
+  assign: (id: string, driverId: string | null) =>
+    patch<VeloceShipment>(`/shipments/${id}`, { driver_id: driverId }),
 }
 
 // ── Plans ────────────────────────────────────────────────────────────────────

@@ -46,12 +46,13 @@ export interface VroomRequest {
   options?: { g: boolean };
 }
 
-export type DriverStatus = 'on_route' | 'paused' | 'delayed' | 'idle';
+export type DriverStatus = 'on_route' | 'paused' | 'delayed' | 'idle' | 'offline';
 
 export interface LiveDriver {
   id: string;
   name: string;
   status: DriverStatus;
+  vehicleType: 'car' | 'bike' | 'truck';
   position: { lng: number; lat: number; heading: number };
   currentLoad: number;
   maxLoad: number;
@@ -66,7 +67,9 @@ export interface LiveDriver {
 export interface DeliveryPoint {
   id: string;
   label: string;
-  location: [number, number]; // [lng, lat]
+  location: [number, number]; // dropoff [lng, lat]
+  pickupLocation?: [number, number]; // [lng, lat]
+  pickupAddress?: string;
   status: 'pending' | 'assigned' | 'done' | 'at_risk';
   driverId: string | null;
   timeWindowStart: string; // HH:mm

@@ -1,5 +1,5 @@
 import type { VeloceDriver, VeloceShipment } from './veloce-api'
-import type { LiveDriver, DeliveryPoint } from '@/types/vrp'
+import type { LiveDriver, DeliveryPoint, DriverStatus } from '@/types/vrp'
 
 const ROUTE_COLORS = [
   '#ef4444', '#f97316', '#eab308', '#22c55e',
@@ -19,12 +19,19 @@ function fmtHHmm(iso: string): string {
   }
 }
 
+function mapStatus(s: VeloceDriver['status']): DriverStatus {
+  if (s === 'on_duty') return 'on_route';
+  if (s === 'off_duty') return 'offline';
+  return 'idle';
+}
+
 export function driversToLive(drivers: VeloceDriver[]): LiveDriver[] {
   const ids = drivers.map((d) => d.id)
   return drivers.map((d) => ({
     id: d.id,
     name: `${d.first_name} ${d.last_name}`,
-    status: d.status === 'on_duty' ? 'on_route' : 'idle' as const,
+    status: mapStatus(d.status),
+    vehicleType: d.vehicle_type,
     position: {
       lng: d.position.lng,
       lat: d.position.lat,
@@ -46,6 +53,8 @@ export function shipmentsToDeliveries(shipments: VeloceShipment[]): DeliveryPoin
     id: s.id,
     label: s.reference,
     location: [s.dropoff_lng, s.dropoff_lat] as [number, number],
+    pickupLocation: [s.pickup_lng, s.pickup_lat] as [number, number],
+    pickupAddress: s.pickup_address,
     status:
       s.status === 'delivered' ? 'done'
       : s.status === 'in_progress' ? 'assigned'

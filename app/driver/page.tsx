@@ -95,7 +95,7 @@ export default function DriverPage() {
       const { lat, lng } = lastPosRef.current;
       pushPosition(lat, lng, lastPosition?.heading ?? 0, 0);
     }, PUSH_INTERVAL_MS);
-  }, [driverId, pushPosition, lastPosition?.heading]);
+  }, [pushPosition, lastPosition?.heading]);
 
   const stopGeo = useCallback(() => {
     if (watchIdRef.current !== null) {
