@@ -1,5 +1,6 @@
 import type { VeloceDriver, VeloceShipment } from './veloce-api'
-import type { LiveDriver, DeliveryPoint, DriverStatus } from '@/types/vrp'
+import type { LiveDriver, DeliveryPoint } from '@/types/vrp'
+import { driverStatusToUi, shipmentStatusToUi } from './status'
 
 const ROUTE_COLORS = [
   '#ef4444', '#f97316', '#eab308', '#22c55e',
@@ -19,24 +20,18 @@ function fmtHHmm(iso: string): string {
   }
 }
 
-function mapStatus(s: VeloceDriver['status']): DriverStatus {
-  if (s === 'on_duty') return 'on_route';
-  if (s === 'off_duty') return 'offline';
-  return 'idle';
-}
+const DEFAULT_POSITION = { lng: 2.3522, lat: 48.8566, heading: 0 }
 
 export function driversToLive(drivers: VeloceDriver[]): LiveDriver[] {
   const ids = drivers.map((d) => d.id)
   return drivers.map((d) => ({
     id: d.id,
-    name: `${d.first_name} ${d.last_name}`,
-    status: mapStatus(d.status),
+    name: `${d.first_name} ${d.last_name}`.trim() || d.code,
+    status: driverStatusToUi(d.status),
     vehicleType: d.vehicle_type,
-    position: {
-      lng: d.position.lng,
-      lat: d.position.lat,
-      heading: d.position.heading,
-    },
+    position: d.position
+      ? { lng: d.position.lng, lat: d.position.lat, heading: d.position.heading }
+      : DEFAULT_POSITION,
     currentLoad: 0,
     maxLoad: d.capacity,
     eta: null,
@@ -55,13 +50,8 @@ export function shipmentsToDeliveries(shipments: VeloceShipment[]): DeliveryPoin
     location: [s.dropoff_lng, s.dropoff_lat] as [number, number],
     pickupLocation: [s.pickup_lng, s.pickup_lat] as [number, number],
     pickupAddress: s.pickup_address,
-    status:
-      s.status === 'delivered' ? 'done'
-      : s.status === 'in_progress' ? 'assigned'
-      : s.status === 'assigned' ? 'assigned'
-      : s.status === 'failed' ? 'at_risk'
-      : 'pending',
-    driverId: s.driver_id,
+    status: shipmentStatusToUi(s.status),
+    driverId: s.driver_id ?? null,
     timeWindowStart: fmtHHmm(s.dropoff_window_start),
     timeWindowEnd: fmtHHmm(s.dropoff_window_end),
     address: s.dropoff_address,

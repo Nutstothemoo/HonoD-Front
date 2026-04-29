@@ -1,10 +1,14 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import Link from 'next/link';
+import { useMutation } from '@tanstack/react-query';
+import TopBar from '@/components/control-center/TopBar';
 import { LiveDriver, DeliveryPoint } from '@/types/vrp';
-import { VeloceResponse, VeloceVehicleResult } from '@/types/veloce';
-import { buildVelocePayload, applyVeloceSolution } from '@/lib/veloce';
+import { VeloceResponse, VeloceVehicleResult, VeloceRequest } from '@/types/veloce';
+import { buildVelocePayload, applyVeloceSolution } from '@/lib/solve-helpers';
+import { solverApi } from '@/lib/veloce-api';
+import { handleApiError } from '@/lib/api-error';
 import { useKPI } from '@/hooks/useKPI';
 import { useVeloceData } from '@/hooks/useVeloceData';
 
@@ -148,16 +152,18 @@ function VehicleConfigRow({
 
 function StopRow({ delivery }: { delivery: DeliveryPoint }) {
   const statusColors: Record<DeliveryPoint['status'], string> = {
-    pending: 'bg-zinc-700 text-zinc-400',
-    assigned: 'bg-blue-500/20 text-blue-400',
-    done: 'bg-green-500/20 text-green-400',
-    at_risk: 'bg-red-500/20 text-red-400',
+    pending:     'bg-zinc-700 text-zinc-400',
+    preassigned: 'bg-violet-500/20 text-violet-300',
+    assigned:    'bg-blue-500/20 text-blue-400',
+    done:        'bg-green-500/20 text-green-400',
+    at_risk:     'bg-red-500/20 text-red-400',
   };
   const statusLabels: Record<DeliveryPoint['status'], string> = {
-    pending: 'En attente',
-    assigned: 'Assigné',
-    done: 'Livré',
-    at_risk: 'Risque',
+    pending:     'En attente',
+    preassigned: 'Préattribuée',
+    assigned:    'Assigné',
+    done:        'Livré',
+    at_risk:     'Risque',
   };
   return (
     <div className="flex items-center gap-3 px-4 py-2.5 border-b border-zinc-800/40 hover:bg-zinc-900/40 transition-colors">
@@ -265,121 +271,105 @@ function RouteTimeline({
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function PlanningPage() {
-  const { drivers: liveDrivers, deliveries: liveDeliveries, loading } = useVeloceData();
-  const [drivers, setDrivers] = useState<LiveDriver[]>([]);
-  const [deliveries, setDeliveries] = useState<DeliveryPoint[]>([]);
-  const [isOptimizing, setIsOptimizing] = useState(false);
+  const { drivers: liveDrivers, deliveries: liveDeliveries } = useVeloceData();
   const [solution, setSolution] = useState<VeloceResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [planDate, setPlanDate] = useState(() => new Date().toISOString().slice(0, 10));
-  const [vehicleConfigs, setVehicleConfigs] = useState<VehicleConfig[]>([]);
+  const [vehicleConfigOverrides, setVehicleConfigOverrides] = useState<Record<string, Partial<VehicleConfig>>>({});
+  // Post-simulate overlay on deliveries (status change) — local only.
+  const [deliveryStatusOverlay, setDeliveryStatusOverlay] = useState<Record<string, DeliveryPoint['status']>>({});
 
-  useEffect(() => {
-    if (liveDrivers.length > 0 && drivers.length === 0) {
-      setDrivers(liveDrivers);
-      setVehicleConfigs(liveDrivers.map((d) => ({
-        driverId: d.id,
-        startTime: '07:00',
-        endTime: '19:00',
-        capacity: d.maxLoad,
-        enabled: d.status === 'on_route' || d.status === 'idle',
-      })));
-    }
-  }, [liveDrivers, drivers.length]);
+  const drivers = liveDrivers;
 
-  useEffect(() => {
-    if (liveDeliveries.length > 0 && deliveries.length === 0) {
-      setDeliveries(liveDeliveries);
-    }
-  }, [liveDeliveries, deliveries.length]);
+  // Compose deliveries = live data + simulated overlay.
+  const deliveries = useMemo<DeliveryPoint[]>(
+    () => liveDeliveries.map((d) =>
+      deliveryStatusOverlay[d.id] ? { ...d, status: deliveryStatusOverlay[d.id] } : d,
+    ),
+    [liveDeliveries, deliveryStatusOverlay],
+  );
+
+  // Vehicle configs derived from drivers + user overrides.
+  const vehicleConfigs = useMemo<VehicleConfig[]>(
+    () => drivers.map((d) => ({
+      driverId: d.id,
+      startTime: vehicleConfigOverrides[d.id]?.startTime ?? '07:00',
+      endTime: vehicleConfigOverrides[d.id]?.endTime ?? '19:00',
+      capacity: vehicleConfigOverrides[d.id]?.capacity ?? d.maxLoad,
+      enabled: vehicleConfigOverrides[d.id]?.enabled ?? (d.status === 'on_route' || d.status === 'idle'),
+    })),
+    [drivers, vehicleConfigOverrides],
+  );
 
   const kpi = useKPI(drivers, deliveries, solution);
 
   const updateVehicleConfig = useCallback((driverId: string, config: VehicleConfig) => {
-    setVehicleConfigs((prev) => prev.map((c) => (c.driverId === driverId ? config : c)));
+    setVehicleConfigOverrides((prev) => ({ ...prev, [driverId]: config }));
   }, []);
 
-  const handleOptimize = useCallback(async () => {
-    setIsOptimizing(true);
-    setError(null);
+  const solveMutation = useMutation<VeloceResponse, Error, VeloceRequest>({
+    mutationFn: (payload) => solverApi.solve(payload),
+    onMutate: () => setError(null),
+    onSuccess: (data) => {
+      setSolution(data);
+      const { updatedDeliveries } = applyVeloceSolution(data, drivers, deliveries);
+      const overlay: Record<string, DeliveryPoint['status']> = {};
+      for (const d of updatedDeliveries) overlay[d.id] = d.status;
+      setDeliveryStatusOverlay(overlay);
+    },
+    onError: (e) => {
+      const message = e instanceof Error ? e.message : 'Erreur inconnue';
+      setError(message);
+      handleApiError(e, 'Simulation d\'optimisation');
+    },
+  });
 
+  const handleOptimize = useCallback(() => {
     const activeDrivers = drivers.filter((d) =>
       vehicleConfigs.find((c) => c.driverId === d.id && c.enabled),
     );
-    const activeDeliveries = deliveries.filter(
-      (d) => d.status !== 'done',
-    );
+    const activeDeliveries = deliveries.filter((d) => d.status !== 'done');
 
     const configMap = new Map(vehicleConfigs.map((c) => [c.driverId, c]));
     const today = new Date(planDate);
-
     const payload = buildVelocePayload(activeDrivers, activeDeliveries, today);
 
-    // Override time windows from vehicleConfigs
     payload.vehicles = activeDrivers.map((d) => {
       const cfg = configMap.get(d.id)!;
-      const datePrefix = planDate;
       return {
         id: d.id,
         start_location: { lon: d.position.lng, lat: d.position.lat },
         end_location: { lon: d.position.lng, lat: d.position.lat },
-        start_time: `${datePrefix}T${cfg.startTime}:00Z`,
-        end_time: `${datePrefix}T${cfg.endTime}:00Z`,
+        start_time: `${planDate}T${cfg.startTime}:00Z`,
+        end_time: `${planDate}T${cfg.endTime}:00Z`,
         capacity: cfg.capacity,
         speed: 10,
       };
     });
 
     if (!payload.stops.length || !payload.vehicles.length) {
-      setError('Aucun arrêt ou véhicule à planifier.');
-      setIsOptimizing(false);
+      setError('Aucun arret ou vehicule a planifier.');
       return;
     }
 
-    try {
-      const res = await fetch('/api/optimize', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+    solveMutation.mutate(payload);
+  }, [drivers, deliveries, vehicleConfigs, planDate, solveMutation]);
 
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error ?? `HTTP ${res.status}`);
-      }
-
-      const data: VeloceResponse = await res.json();
-      setSolution(data);
-
-      const { updatedDeliveries } = applyVeloceSolution(data, drivers, deliveries);
-      setDeliveries(updatedDeliveries);
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Erreur inconnue');
-    } finally {
-      setIsOptimizing(false);
-    }
-  }, [drivers, deliveries, vehicleConfigs, planDate]);
+  const isOptimizing = solveMutation.isPending;
 
   const unassignedCount = solution
     ? solution.solutions?.[0]?.unplanned?.length ?? 0
     : 0;
 
-  if (loading) {
-    return (
-      <div className="flex flex-col h-full items-center justify-center bg-zinc-950">
-        <div className="w-8 h-8 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
-        <span className="text-xs text-zinc-600 mt-3">Chargement…</span>
-      </div>
-    );
-  }
-
   return (
-    <>
-      <PlanningTopBar
-        isOptimizing={isOptimizing}
-        onOptimize={handleOptimize}
-        hasResult={!!solution}
-      />
+    <div className="flex flex-col h-screen">
+      <TopBar isOptimizing={isOptimizing} onOptimize={handleOptimize} />
+
+      {!!solution && (
+        <div className="border-b border-emerald-500/20 bg-emerald-500/5 px-4 py-1.5 text-[11px] text-emerald-300">
+          ✓ Plan calculé — {unassignedCount} non planifiée{unassignedCount > 1 ? 's' : ''}
+        </div>
+      )}
 
       <div className="flex flex-1 min-h-0">
         {/* Left panel: config */}
@@ -481,6 +471,6 @@ export default function PlanningPage() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

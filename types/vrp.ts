@@ -70,7 +70,7 @@ export interface DeliveryPoint {
   location: [number, number]; // dropoff [lng, lat]
   pickupLocation?: [number, number]; // [lng, lat]
   pickupAddress?: string;
-  status: 'pending' | 'assigned' | 'done' | 'at_risk';
+  status: 'pending' | 'preassigned' | 'assigned' | 'done' | 'at_risk';
   driverId: string | null;
   timeWindowStart: string; // HH:mm
   timeWindowEnd: string;

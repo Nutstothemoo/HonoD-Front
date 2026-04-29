@@ -2,15 +2,24 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import { Cross2Icon } from '@radix-ui/react-icons';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronLeftIcon, Cross2Icon } from '@radix-ui/react-icons';
+import { springs } from '@/components/atoms/motion';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LiveDriver, DriverStatus, DeliveryPoint } from '@/types/vrp';
 
+// Stagger entry of list items, but cap so long lists don't feel sluggish.
+const STAGGER_STEP_S = 0.025;
+const STAGGER_MAX_S  = 0.2;
+const stagger = (i: number) => Math.min(i * STAGGER_STEP_S, STAGGER_MAX_S);
+
+// Shared glass surface — must match MissionPanel
+const PANEL_GLASS = 'bg-zinc-950/75 backdrop-blur-xl backdrop-saturate-150 border-zinc-800/50';
+
 interface DriverSidebarProps {
   drivers: LiveDriver[];
   deliveries: DeliveryPoint[];
-  focusDriverId: string | null;
   onDriverClick: (id: string) => void;
   onDriverAssign: (driverId: string) => void;
   onDeliveryClick: (delivery: DeliveryPoint) => void;
@@ -86,9 +95,10 @@ function ProgressBar({ completed, total, color }: { completed: number; total: nu
 }
 
 export default function DriverSidebar({
-  drivers, deliveries, focusDriverId,
+  drivers, deliveries,
   onDriverClick, onDriverAssign, onDeliveryClick, onVisibleDriversChange, onClose,
 }: DriverSidebarProps) {
+  const [collapsed, setCollapsed] = useState(false);
   const [search, setSearch] = useState('');
   const [filterVehicle, setFilterVehicle] = useState<VehicleFilter>('all');
   const [filterStatus, setFilterStatus] = useState<StatusFilter>('all');
@@ -115,9 +125,73 @@ export default function DriverSidebar({
 
   const delayed = drivers.filter((d) => d.status === 'delayed');
   const active  = drivers.filter((d) => d.status !== 'idle' && d.status !== 'offline');
+  const idle    = drivers.filter((d) => d.status === 'idle');
 
+  // ── Single shell that animates width — content cross-fades inside ────────────
+  // The aside owns the width spring; AnimatePresence swaps the two view trees.
+  // mode="wait" guarantees the outgoing view fully fades before the incoming one
+  // starts, so we never see two trees overlapping during the width morph.
   return (
-    <aside className="w-72 h-full bg-zinc-950/90 backdrop-blur-md border-r border-zinc-800/50 flex flex-col overflow-hidden">
+    <motion.aside
+      animate={{ width: collapsed ? 48 : 288 }}
+      initial={false}
+      transition={springs.default}
+      className={`h-full ${PANEL_GLASS} border-r flex flex-col overflow-hidden`}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        {collapsed ? (
+          <motion.div
+            key="collapsed"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.12 }}
+            className="flex flex-col h-full overflow-hidden"
+          >
+            <div className="h-11 border-b border-zinc-800/50 flex items-center justify-center">
+              <button
+                onClick={() => setCollapsed(false)}
+                className="p-1.5 rounded hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 transition-colors"
+                title="Afficher les chauffeurs"
+              >
+                <ChevronLeftIcon className="w-4 h-4 rotate-180" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto py-2 flex flex-col items-center gap-2">
+              {[
+                { key: 'available' as StatusFilter, count: idle.length,    bg: '#22c55e', title: 'Disponibles' },
+                { key: 'busy'      as StatusFilter, count: active.length,  bg: '#3b82f6', title: 'Occupés' },
+                { key: 'offline'   as StatusFilter, count: delayed.length, bg: '#ef4444', title: 'Retards', pulse: true },
+              ].map((item) => (
+                item.count > 0 && (
+                  <motion.button
+                    key={item.key}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={springs.snappy}
+                    onClick={() => { setCollapsed(false); setFilterStatus(item.key); }}
+                    title={`${item.title} (${item.count})`}
+                    className="relative w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold text-white"
+                    style={{ background: item.bg }}
+                  >
+                    {item.count}
+                    {item.pulse && (
+                      <span className="absolute inset-0 rounded-lg animate-pulse" style={{ background: item.bg, opacity: 0.4 }} />
+                    )}
+                  </motion.button>
+                )
+              ))}
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="expanded"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.14 }}
+            className="flex flex-col h-full overflow-hidden"
+          >
 
       {/* Header */}
       <div className="px-3 py-2.5 border-b border-zinc-800/50 flex items-center justify-between gap-2">
@@ -133,6 +207,13 @@ export default function DriverSidebar({
           )}
         </div>
         <div className="flex items-center gap-0.5 shrink-0">
+          <button
+            onClick={() => setCollapsed(true)}
+            className="p-1 rounded hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 transition-colors"
+            title="Réduire"
+          >
+            <ChevronLeftIcon className="w-4 h-4" />
+          </button>
           <button
             onClick={onClose}
             className="p-1 rounded hover:bg-zinc-800/60 text-zinc-500 hover:text-zinc-300 transition-colors"
@@ -210,16 +291,19 @@ export default function DriverSidebar({
             <div className="px-4 py-6 text-center text-xs text-zinc-600">Aucun chauffeur ne correspond</div>
           )}
 
-          {filteredDrivers.map((driver) => {
+          <AnimatePresence initial={false}>
+          {filteredDrivers.map((driver, index) => {
             const cfg = STATUS_CONFIG[driver.status];
-            const isFocused = focusDriverId === driver.id;
 
             return (
-              <div
+              <motion.div
                 key={driver.id}
-                className={`border-l-2 transition-colors ${
-                  isFocused ? 'bg-zinc-800/50 border-l-blue-500' : 'border-l-transparent'
-                }`}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, x: -16, scale: 0.97 }}
+                transition={{ ...springs.default, delay: stagger(index) }}
+                whileHover={{ x: 2 }}
+                className="border-l-2 border-l-transparent"
               >
                 <button
                   onClick={() => onDriverClick(driver.id)}
@@ -282,9 +366,10 @@ export default function DriverSidebar({
                     <LoadBar current={driver.currentLoad} max={driver.maxLoad} color={driver.routeColor} />
                   </div>
                 </button>
-              </div>
+              </motion.div>
             );
           })}
+          </AnimatePresence>
 
           {/* Mission search results */}
           {matchedDeliveries.length > 0 && (
@@ -294,35 +379,48 @@ export default function DriverSidebar({
                   Missions ({matchedDeliveries.length})
                 </span>
               </div>
-              {matchedDeliveries.map((delivery) => {
-                const bg = { pending: '#6b7280', assigned: '#3b82f6', done: '#10b981', at_risk: '#ef4444' }[delivery.status];
+              <AnimatePresence initial={false}>
+              {matchedDeliveries.map((delivery, index) => {
+                const bg = { pending: '#6b7280', preassigned: '#a78bfa', assigned: '#3b82f6', done: '#10b981', at_risk: '#ef4444' }[delivery.status];
                 return (
-                  <button
+                  <motion.div
                     key={delivery.id}
-                    onClick={() => onDeliveryClick(delivery)}
-                    className="w-full text-left px-3 py-2.5 hover:bg-zinc-800/50 transition-colors group"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, x: -12, scale: 0.97 }}
+                    transition={{ ...springs.default, delay: stagger(index) }}
+                    whileHover={{ x: 2 }}
                   >
-                    <div className="flex items-center gap-2.5">
-                      <div
-                        className="w-7 h-7 rounded-lg shrink-0 flex items-center justify-center text-[10px] font-bold text-white"
-                        style={{ background: bg }}
-                      >
-                        {delivery.label.slice(0, 2)}
-                      </div>
-                      <div className="min-w-0">
-                        <div className="text-xs text-zinc-400 group-hover:text-zinc-200 truncate transition-colors">
-                          {delivery.address}
+                    <button
+                      onClick={() => onDeliveryClick(delivery)}
+                      className="w-full text-left px-3 py-2.5 hover:bg-zinc-800/50 transition-colors group"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div
+                          className="w-7 h-7 rounded-lg shrink-0 flex items-center justify-center text-[10px] font-bold text-white"
+                          style={{ background: bg }}
+                        >
+                          {delivery.label.slice(0, 2)}
                         </div>
-                        <div className="text-[10px] text-zinc-600">{delivery.timeWindowStart} – {delivery.timeWindowEnd}</div>
+                        <div className="min-w-0">
+                          <div className="text-xs text-zinc-400 group-hover:text-zinc-200 truncate transition-colors">
+                            {delivery.address}
+                          </div>
+                          <div className="text-[10px] text-zinc-600">{delivery.timeWindowStart} – {delivery.timeWindowEnd}</div>
+                        </div>
                       </div>
-                    </div>
-                  </button>
+                    </button>
+                  </motion.div>
                 );
               })}
+              </AnimatePresence>
             </>
           )}
         </div>
       </ScrollArea>
-    </aside>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.aside>
   );
 }

@@ -24,17 +24,19 @@ const STATUS_CONFIG: Record<DriverStatus, { label: string; color: string; dot: s
 };
 
 const DELIVERY_STATUS_COLORS: Record<DeliveryPoint['status'], string> = {
-  pending:  '#6b7280',
-  assigned: '#3b82f6',
-  done:     '#10b981',
-  at_risk:  '#ef4444',
+  pending:     '#6b7280',
+  preassigned: '#a78bfa',
+  assigned:    '#3b82f6',
+  done:        '#10b981',
+  at_risk:     '#ef4444',
 };
 
 const DELIVERY_STATUS_OPTIONS: { key: DeliveryPoint['status']; label: string }[] = [
-  { key: 'pending',  label: 'En attente' },
-  { key: 'assigned', label: 'Assignée' },
-  { key: 'done',     label: '✓ Livrée' },
-  { key: 'at_risk',  label: '⚠ Retard' },
+  { key: 'pending',     label: 'En attente' },
+  { key: 'preassigned', label: 'Préattribuée' },
+  { key: 'assigned',    label: 'Assignée' },
+  { key: 'done',        label: '✓ Livrée' },
+  { key: 'at_risk',     label: '⚠ Retard' },
 ];
 
 function VehicleIcon({ type, className = '' }: { type: 'car' | 'bike' | 'truck'; className?: string }) {
@@ -116,10 +118,11 @@ function DeliveryView({ delivery, drivers, onAssign, onUnassign, onStatusChange,
                   onClick={() => onStatusChange(key)}
                   className={`rounded-full border px-3 py-1 text-xs font-medium transition-all ${
                     delivery.status === key
-                      ? key === 'done'     ? 'border-emerald-500/50 bg-emerald-500/20 text-emerald-300'
-                      : key === 'at_risk'  ? 'border-red-500/50 bg-red-500/20 text-red-300'
-                      : key === 'assigned' ? 'border-blue-500/50 bg-blue-500/20 text-blue-300'
-                      :                     'border-white/10 bg-white/10 text-zinc-100'
+                      ? key === 'done'        ? 'border-emerald-500/50 bg-emerald-500/20 text-emerald-300'
+                      : key === 'at_risk'     ? 'border-red-500/50 bg-red-500/20 text-red-300'
+                      : key === 'assigned'    ? 'border-blue-500/50 bg-blue-500/20 text-blue-300'
+                      : key === 'preassigned' ? 'border-violet-500/50 bg-violet-500/20 text-violet-300'
+                      :                        'border-white/10 bg-white/10 text-zinc-100'
                       : 'border-white/10 bg-white/[0.03] text-zinc-400 hover:border-white/20 hover:bg-white/[0.06] hover:text-zinc-200'
                   }`}
                 >
